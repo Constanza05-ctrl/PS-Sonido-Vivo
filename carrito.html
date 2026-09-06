@@ -3,23 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras - Tienda de Musica Sonido Vivo</title>
+    <title>Proceso de Compra</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
     <header class="header-principal">
-        <h1>Tienda de Musica</h1>
-            <nav class="nav-principal" aria-label="Navegacion Principal">
-                <ul>
-                    <li><a href="index.html">Inicio</a></li>
-                    <li><a href="carrito.html" class="active">Carrito</a></li>
-                </ul>
-            </nav>
+        <h1>Tienda de Música</h1>
+        <nav class="nav-principal">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="carrito.html">Carrito</a></li>
+            </ul>
+        </nav>
     </header>
+
     <main class="contenedor">
-        <div class="seccion-cabecera">
-            <h2>Tu Carrito de Compras</h2>
-            <p>Confirma los productos seleccionados antes de pagar</p>
-        </div>          
+        
+        <h2>Tu Carrito de Compras</h2>
+        <p>Revisa tus productos seleccionados antes de finalizar la compra.</p>
+
+        <section class="carrito-layout">
+            
+            <section class="seccion-productos-carrito">
+                <div id="contenedor-items-carrito">
+                    <p class="mensaje-vacio">Cargando productos del carrito...</p>
+                </div>
+            </section>
+
+            <aside class="panel-resumen">
+                <h3>Resumen del Pedido</h3>
+                <section class="resumen-del-detalle">
+                    <p><strong>Subtotal:</strong> <strong id="resumen-subtotal">$0</strong></p>
+                    <p><strong>Envio:</strong> <strong id="resumen-envio">Calculo Pendiente</strong></p>
+                    <hr>
+                    <p><strong>Total:</strong> <strong id="resumen-total">$0</strong></p>                                                                            
+                </section>
+                <p class="acciones-resumen">
+                    <button id="btn-comprar" class="btn-agregar" type="button">Proceder con el pago</button>
+                    <button id="btn-vaciar" class="btn-limpiar" type="button">Vaciar Carrito</button>
+                </p>
+            </aside>
+        </section>    
 </body>
 </html>
