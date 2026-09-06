@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proceso de Compra</title>
+    <title>Carrito de Compras - Tienda de Música</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,13 +14,18 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="carrito.html">Carrito</a></li>
+                <li>
+                    <a href="login.html" class="link-perfil" aria-label="Perfil de usuario">
+                        <img src="assets/img/user-icon.svg" alt="Perfil" class="icono-perfil">
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
 
     <main class="contenedor">
         
-        <h2>Tu Carrito de Compras</h2>
+        <h2 class="titulo-encuadrado">Tu Carrito de Compras</h2>
         <p>Revisa tus productos seleccionados antes de finalizar la compra.</p>
 
         <section class="carrito-layout">
@@ -32,21 +37,38 @@
             </section>
 
             <aside class="panel-resumen">
-                <h3>Resumen del Pedido</h3>
-                <section class="resumen-del-detalle">
+                <h3 class="titulo-encuadrado">Resumen del Pedido</h3>
+                
+                <section class="resumen-detalle">
                     <p><strong>Subtotal:</strong> <strong id="resumen-subtotal">$0</strong></p>
-                    <p><strong>Monto Envio:</strong> <strong id="resumen-envio">Calculo Pendiente</strong></p>
+                    <p><strong>Envío:</strong> <strong id="resumen-envio">Por calcular</strong></p>
+                    
+                    <!-- Campo para código de descuento -->
+                    <div class="bloque-cupon">
+                        <label for="input-cupon"><strong>Código de Descuento:</strong></label>
+                        <div class="cupon-input-grupo">
+                            <input type="text" id="input-cupon" placeholder="Ej: DUOC10">
+                            <button id="btn-cupon" class="btn-limpiar" type="button">Aplicar</button>
+                        </div>
+                    </div>
+
                     <hr>
-                    <p><strong>Total:</strong> <strong id="resumen-total">$0</strong></p>                                                                            
+                    <!-- Monto total destacado -->
+                    <p class="monto-destacado">
+                        <strong>Total:</strong> <strong id="resumen-total">$0</strong>
+                    </p>
                 </section>
+
                 <p class="acciones-resumen">
-                    <button id="btn-comprar" class="btn-agregar" type="button">Proceder con el pago</button>
+                    <button id="btn-comprar" class="btn-agregar" type="button">Proceder al Pago</button>
                     <button id="btn-vaciar" class="btn-limpiar" type="button">Vaciar Carrito</button>
                 </p>
             </aside>
+
         </section>
+
     </main>
-    
+
     <footer class="footer-principal">
         <p>&copy; 2026 Tienda de Música. Todos los derechos reservados.</p>
     </footer>
