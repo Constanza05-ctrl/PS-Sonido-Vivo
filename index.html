@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonido Vivo - Tienda de instrumentos Musicales</title>
+    <title>Sonido Vivo - Tienda de Instrumentos Musicales</title>
     <link rel="stylesheet" href="css/catalogo.css">
 </head>
 <body>
     <header class="header-principal">
         <div class="contenedor header-contenido">
             <h1 class="logo">Sonido <span>Vivo</span></h1>
-            <nav clas="navegacion-principal">
+            <nav class="navegacion-principal">
                 <a href="index.html" class="active">Catálogo</a>
                 <a href="carrito.html">Carrito y Despacho</a>
-                <a href="admin.html">administración</a>
+                <a href="admin.html">Administración</a>
             </nav>
         </div>
     </header>
     
-    <main class ="contenedor">
+    <main class="contenedor">
         <section id="inicio" class="hero">
-            <div clas="contenedor hero-contenido">
+            <div class="contenedor hero-contenido">
                 <h2>Instrumentos & Equipos de Sonido Profesional</h2>
             </div>
         </section>
@@ -28,14 +28,14 @@
         <section class="busqueda-section">
             <h2>Buscador de Productos</h2>
             <div class="filtros-container">
-               <input type="text" id="input-buscar" placeholder="Buscar por nombre o marca (ej. Yamaha, Fender)...">
+               <input type="text" id="input-Buscar" placeholder="Buscar por nombre o marca (ej. Yamaha, Fender)...">
 
-               <select id="select-categoria">
-                    <option value="Todas">Todas las categorias</option>
+               <select id="select-Categoria">
+                    <option value="Todas">Todas las categorías</option>
                     <option value="Guitarras Acústicas">Guitarras Acústicas</option>
                     <option value="Guitarras Eléctricas">Guitarras Eléctricas</option>
                     <option value="Bajos Eléctricos">Bajos Eléctricos</option>
-                    <option value="Bateria ">Bateria</option>
+                    <option value="Baterías">Baterías</option>
                     <option value="Teclados y Pianos">Teclados y Pianos</option>
                     <option value="Amplificadores">Amplificadores</option>
                     <option value="Micrófonos">Micrófonos</option>
@@ -43,11 +43,33 @@
                     <option value="Accesorios">Accesorios</option>
                     <option value="Estudio y Grabación">Estudio y Grabación</option>
                 </select>
+
+                <select id="select-Orden">
+                    <option value="defecto">Ordenar por...</option>
+                    <option value="precio-asc">Precio: Menor a Mayor</option>
+                    <option value="precio-desc">Precio: Mayor a Menor</option>
+                    <option value="nombre-asc">Nombre: A - Z</option>
+                </select>
+
+                <button id="btn-limpiar" type="button">Limpiar Filtros</button>
             </div>
+            
+            <p id="msj-error-busqueda" style="color: red; display: none; margin-top: 5px;"></p>
+            <p id="contador-resultados" style="margin-top: 10px; font-weight: bold;"></p>
         </section>
 
         <section class="catalogo-section">
-            <div id="catalogo" class="grid-productos">
+            <div id="catalogo" class="grid-productos"></div>
+        </section>
+
+        <section class="video-seccion">
+            <h2>Conoce Nuestra Tienda en Viña del Mar</h2>
+            <p>Te mostramos una prueba de nuestros instrumentos.</p>
+            <div class="contenedor-video">
+                <video controls width="100%">
+                    <source src="assets/video/presentacion.mp4" type="video/mp4">
+                    Tu navegador no soporta el formato de video.
+                </video>
             </div>
         </section>
     </main>

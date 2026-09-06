@@ -1,177 +1,198 @@
-* {
-    box-sizing: border-box;
+:root {
+    --primary: #1e293b;
+    --accent: #2563eb;
+    --error: #dc2626;
+    --bg: #f8fafc;
+    --text: #0f172a;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
     margin: 0;
     padding: 0;
 }
 
-:root {
-    --primary: #0f172a;
-    --accent: #c28e0e;
-    --secondary: #1e293b;
-    --bg: #f8fafc;
-    --text: #334155;
-    --border: #e2e8f0;
+.header-principal {
+    background-color: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+.nav-principal ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-principal a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .contenedor {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 2rem auto;
     padding: 0 1rem;
 }
 
-.header-principal {
-    background-color: var(--primary);
-    color: #fff;
-    padding: 1.5rem 0;
-}
-
-.header-contenido {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.logo span {
-    color: var(--accent);
-}
-
-.navegacion-principal {
-    display: flex;gap: 15px;
-}
-
-.navegacion-principal a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-.navegacion-principal a.active,
-.navegacion-principal a:hover {
-    background-color: var(--accent);
-}
-
-.hero {
-    text-align: center;
-    margin: 2rem 0 1.5rem 0;
-}
-
 .busqueda-section {
-    background-color: #fff;
+    background: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-bottom: 2rem;
 }
 
 .filtros-container {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
-    margin-top: 1rem;
 }
 
-.filtros-container input,
-.filtros-container select {
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 1rem;
-    outline: none;
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-grupo label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+}
+
+.campo-grupo input, .campo-grupo select {
+    padding: 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+
+.mensaje-error {
+    color: var(--error);
+    font-size: 0.75rem;
+    margin-top: 0.2rem;
+    display: none;
+}
+
+.acciones-busqueda {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contador-texto {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.btn-limpiar {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
 }
 
 .grid-productos {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
 }
 
 .tarjeta-producto {
-    background: #fff;
-    border: 1px solid var(--border);
+    background: white;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 1.25rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;   
+    justify-content: space-between;
+}
+
+.imagen-contenedor {
+  width: 100%;
+  height: 180px;
+  background-color: #f8f9fa;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.imagen-contenedor img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  display: block;
 }
 
 .categoria-tag {
     font-size: 0.75rem;
-    background: #e9ecef;
-    padding: 2px 8px;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
-    font-weight: bold;
-    width:fit-content;
+    font-weight: 600;
 }
 
 .precio {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--accent);
-    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0.5rem 0;
 }
 
 .btn-agregar {
-    background: var(--accent);
-    color: #fff;
+    background-color: var(--accent);
+    color: white;
     border: none;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 0.6rem;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: opacity 0.2s;
-}
-.btn-agregar:hover {
-    opacity: 0.85;
+    width: 100%;
+    font-weight: 600;
 }
 
-footer,
-.pie-pagina {
-    background-color: var(--primary);
-    color: #fff;
-    text-align: center;
-    padding: 2rem 0;
+.seccion-video {
     margin-top: 3rem;
+    text-align: center;
 }
 
-.footer-contenido {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    border-radius: 8px;
 }
 
-.footer-contenido p {
-    color: #cbd5e1;
-    font-size: 0.9rem;
-}
-@media (min-width: 768px) {
-    .header-contenido {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .filtros-container {
-        grid-template-columns: 2fr 1fr;
-    }
-    .grid-productos {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
-@media (min-width: 1280px) {
-    .grid-productos {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.footer-principal {
+    background-color: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 3rem;
 }
