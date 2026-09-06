@@ -215,7 +215,6 @@ body {
     height: 24px;
     filter: invert(1);
 }
-
 .carrito-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -244,18 +243,14 @@ body {
     margin: 0.6rem 0;
 }
 
+/* Monto destacado */
 .resumen-detalle .monto-destacado {
     font-size: 1.4rem;
     color: var(--primary);
     margin-top: 1rem;
 }
-
 .bloque-cupon {
     margin: 1.2rem 0;
-}
-
-.bloque-cupon label {
-    font-size: 0.9rem;
 }
 
 .cupon-input-grupo {
@@ -270,23 +265,34 @@ body {
     border: 1px solid #cbd5e1;
     border-radius: 4px;
 }
+.mensaje-estado {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    display: none;
+}
+
+.mensaje-estado.exito {
+    display: block;
+    color: #15803d;
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+}
+
+.mensaje-estado.error {
+    display: block;
+    color: var(--error);
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
 
 .acciones-resumen {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
     margin-top: 1.5rem;
-}
-
-.btn-secundario-vaciar {
-    background: transparent;
-    border: 1px solid var(--error);
-    color: var(--error);
-    padding: 0.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    width: 100%;
 }
 
 .tarjeta-item-carrito {
