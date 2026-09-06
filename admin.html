@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración - Sonido Vivo</title>
-      <link rel="stylesheet" href="css/catalogo.css">
+    
+    <link rel="stylesheet" href="css/catalogo.css">
 </head>
 <body>
-
     <header class="header-principal">
         <div class="contenedor header-contenido">
             <h1 class="logo">Sonido <span>Vivo</span></h1>
@@ -19,3 +19,38 @@
         </div>
     </header>
     
+    <main class="contenedor">
+        <section class="admin-section">
+            <h2>Panel de Administración de Productos</h2>
+            <button id="btn-nuevo-producto" class="btn-accion"> + Añadir Nuevo Producto</button>
+            
+            
+            <table class="tabla-admin">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-productos-body">
+                    
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor footer-contenido">
+           <p>&copy; 2026 Sonido Vivo - Viña del Mar, Región de Valparaíso</p>
+        </div>
+    </footer>
+
+    
+    <script src="js/productos.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
