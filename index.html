@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonido Vivo - Tienda de instrumentos Musicales</title>
+    <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+    <header class="header-principal">
+        <div class="contenedor header-contenido">
+            <h1 class="logo">Sonido <span>Vivo</span></h1>
+            <nav clas="navegacion-principal">
+                <a href="index.html" class="active">Catálogo</a>
+                <a href="carrito.html">Carrito y Despacho</a>
+                <a href="admin.html">administración</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class ="contenedor">
+        <section id="inicio" class="hero">
+            <div clas="contenedor hero-contenido">
+                <h2>Instrumentos & Equipos de Sonido Profesional</h2>
+            </div>
+        </section>
+
+        <section class="busqueda-section">
+            <h2>Buscador de Productos</h2>
+            <div class="filtros-container">
+               <input type="text" id="input-busqueda" placeholder="Buscar por nombre o marca (ej. Yamaha, Fender)...">
+
+               <select id="select-categoria">
+                    <option value="Todas">Todas las categorias</option>
+                    <option value="Guitarras Acústicas">Guitarras Acústicas</option>
+                    <option value="Guitarras Eléctricas">Guitarras Eléctricas</option>
+                    <option value="Bajos Eléctricos">Bajos Eléctricos</option>
+                    <option value="Bateria ">Bateria</option>
+                    <option value="Teclados y Pianos">Teclados y Pianos</option>
+                    <option value="Amplificadores">Amplificadores</option>
+                    <option value="Micrófonos">Micrófonos</option>
+                    <option value="Pedales de Efectos">Pedales de Efectos</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Estudio y Grabación">Estudio y Grabación</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="catalogo-section">
+            <div id="grid-productos" class="grid-productos">
+            </div>
+        </section>
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor footer-contenido">
+           <p>&copy; 2026 Sonido Vivo - Viña del Mar, Región de Valparaíso</p>
+        </div>
+    </footer>
+
+    <script src="js/productos.js"></script>
+    <script src="js/catalogo.js"></script>
+</body>
+</html>
