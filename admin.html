@@ -4,63 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración - Sonido Vivo</title>
-   
-    <link rel="stylesheet" href="css/catalogo.css">
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/productos.js" defer></script>
+    <script src="js/admin.js" defer></script>
 </head>
 <body>
-   
+
     <header class="header-principal">
-        <div class="contenedor header-contenido">
-            <h1 class="logo">Sonido <span>Vivo</span></h1>
-            <nav class="navegacion-principal">
-                <a href="index.html">Catálogo</a>
-                <a href="carrito.html">Carrito</a>
-                <a href="admin.html" class="active">Administración</a>
-            </nav>
-        </div>
+        <h1>Sonido Vivo</h1>
+        <nav class="nav-principal">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="carrito.html">Carrito</a></li>
+                <li>
+                    <a href="admin.html" class="activo" aria-label="Panel de Administración">
+                        <img src="img/user-icon.svg" alt="Administración" class="icono-perfil">
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </header>
-    
+
     <main class="contenedor">
-        <section class="admin-section" style="margin-top: 40px; margin-bottom: 40px;">
-            <h2>Panel de Administración de Productos</h2>
-            <button id="btn-nuevo-producto" class="btn-accion" style="margin-bottom: 20px; padding: 10px 20px; cursor: pointer;">
+        <section class="seccion-admin">
+            <h2 class="titulo-encuadrado">Panel de Administración de Productos</h2>
+            <div id="mensaje-admin" class="mensaje-estado"></div>
+
+            <button id="btn-nuevo-producto" class="btn-agregar" type="button">
                 + Añadir Nuevo Producto
             </button>
-            
-            
-            <table class="tabla-admin" style="width: 100%; text-align: left; border-collapse: collapse;">
-                <thead style="background-color: #333; color: white;">
+
+            <table class="tabla-admin">
+                <thead>
                     <tr>
-                        <th style="padding: 10px;">Código</th>
-                        <th style="padding: 10px;">Nombre</th>
-                        <th style="padding: 10px;">Categoría</th>
-                        <th style="padding: 10px;">Stock</th>
-                        <th style="padding: 10px;">Precio</th>
-                        <th style="padding: 10px;">Acciones</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-productos-body">
-                    
                 </tbody>
             </table>
         </section>
 
-        
-        <div id="modal-agregar-producto" class="modal-overlay" style="display: none;">
+        <!-- Modal de formulario -->
+        <div id="modal-agregar-producto" class="modal-overlay">
             <div class="modal-contenido">
                 <div class="modal-header">
                     <h3>Añadir Nuevo Producto</h3>
-                    <button id="btn-cerrar-modal" class="btn-cerrar">&times;</button>
+                    <button id="btn-cerrar-modal" class="btn-cerrar" type="button">&times;</button>
                 </div>
-                
+
                 <form id="form-producto" novalidate>
                     <div class="form-grupo">
                         <label for="input-codigo">Código del Producto:</label>
                         <input type="text" id="input-codigo" placeholder="Ej: GA006" autocomplete="off">
                         <span id="error-codigo" class="msj-error"></span>
                     </div>
-                    
+
                     <div class="form-grupo">
                         <label for="input-nombre">Nombre:</label>
                         <input type="text" id="input-nombre" placeholder="Nombre del instrumento" autocomplete="off">
@@ -117,14 +121,9 @@
         </div>
     </main>
 
-    <footer class="pie-pagina">
-        <div class="contenedor footer-contenido">
-           <p>&copy; 2026 Sonido Vivo - Viña del Mar, Región de Valparaíso</p>
-        </div>
+    <footer class="footer-principal">
+        <p>&copy; 2026 Sonido Vivo. Todos los derechos reservados.</p>
     </footer>
 
-    
-    <script src="js/productos.js"></script>
-    <script src="js/admin.js"></script>
 </body>
 </html>

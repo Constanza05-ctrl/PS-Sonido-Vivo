@@ -1,58 +1,134 @@
+.seccion-admin {
+    margin: 40px 0;
+}
+
+.tabla-admin {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabla-admin thead {
+    background-color: #333;
+    color: white;
+}
+
+.tabla-admin th, 
+.tabla-admin td {
+    padding: 12px;
+}
+
 .tabla-admin tbody tr {
     border-bottom: 1px solid #ddd;
 }
+
 .tabla-admin tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f8f9fa;
 }
-.tabla-admin td {
-    padding: 10px;
-}
+
 .btn-editar, .btn-eliminar {
-    padding: 5px 10px;
+    padding: 6px 12px;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
     color: white;
 }
+
 .btn-editar { background-color: #3498db; margin-right: 5px; }
 .btn-eliminar { background-color: #e74c3c; }
 
+/* Modal */
 .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
     background: rgba(0,0,0,0.6);
-    display: flex; justify-content: center; align-items: center;
+    display: none; 
+    justify-content: center; 
+    align-items: center;
     z-index: 1000;
 }
+
+.modal-overlay.modal-visible {
+    display: flex;
+}
+
 .modal-contenido {
-    background: #ffffff; padding: 25px; border-radius: 8px; 
-    width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background: #ffffff; 
+    padding: 25px; 
+    border-radius: 8px; 
+    width: 90%; 
+    max-width: 500px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
+
 .modal-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 10px;
 }
+
 .btn-cerrar { 
-    background: none; border: none; font-size: 28px; cursor: pointer; color: #666;
+    background: none; 
+    border: none; 
+    font-size: 28px; 
+    cursor: pointer; 
+    color: #666;
 }
+
 .form-grupo { margin-bottom: 15px; display: flex; flex-direction: column; }
 .form-row { display: flex; gap: 15px; }
 .form-row .form-grupo { flex: 1; }
 .form-grupo label { font-weight: bold; margin-bottom: 6px; font-size: 0.9em; }
-.form-grupo input, .form-grupo select { 
-    padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;
+
+.form-grupo input, 
+.form-grupo select { 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 1em;
 }
 
-.form-grupo input.input-error, .form-grupo select.input-error { 
-    border: 2px solid #e74c3c; background-color: #fdf0ed;
+.form-grupo input.input-error, 
+.form-grupo select.input-error { 
+    border: 2px solid #e74c3c; 
+    background-color: #fdf0ed;
 }
+
 .msj-error { 
-    color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: none; font-weight: bold;
+    color: #e74c3c; 
+    font-size: 0.85em; 
+    margin-top: 5px; 
+    display: none; 
+    font-weight: bold;
 }
+
 .btn-guardar { 
-    background-color: #2ecc71; color: white; border: none; padding: 12px; 
-    cursor: pointer; border-radius: 4px; width: 100%; font-size: 16px; font-weight: bold;
-    margin-top: 10px; transition: background 0.3s;
+    background-color: #2ecc71; 
+    color: white; 
+    border: none; 
+    padding: 12px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    width: 100%; 
+    font-size: 16px; 
+    font-weight: bold;
+    margin-top: 10px; 
+    transition: background 0.3s;
 }
+
 .btn-guardar:hover { background-color: #27ae60; }
 
-
+.mensaje-estado {
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 4px;
+    display: none;
+    font-weight: bold;
+}
+.mensaje-exito { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.mensaje-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
