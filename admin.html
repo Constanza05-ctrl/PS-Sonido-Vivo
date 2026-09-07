@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración - Sonido Vivo</title>
+    <title>Administración</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/productos.js" defer></script>
     <script src="js/admin.js" defer></script>
@@ -17,8 +17,8 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="carrito.html">Carrito</a></li>
                 <li>
-                    <a href="admin.html" class="activo" aria-label="Panel de Administración">
-                        <img src="img/user-icon.svg" alt="Administración" class="icono-perfil">
+                    <a href="admin.html" class="link-perfil activo" aria-label="Perfil de usuario">
+                        <img src="img/user-icon.svg" alt="Administracion" class="icono-perfil">
                     </a>
                 </li>
             </ul>
@@ -26,65 +26,73 @@
     </header>
 
     <main class="contenedor">
-        <section class="seccion-admin">
-            <h2 class="titulo-encuadrado">Panel de Administración de Productos</h2>
-            <div id="mensaje-admin" class="mensaje-estado"></div>
+        <h2 class="titulo-encuadrado">Panel de Administración</h2>
+        <p>Gestiona los productos del inventario de la tienda.</p>
 
-            <button id="btn-nuevo-producto" class="btn-agregar" type="button">
-                + Añadir Nuevo Producto
-            </button>
+        <div id="mensaje-admin" class="mensaje-estado"></div>
 
-            <table class="tabla-admin">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Stock</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-productos-body">
-                </tbody>
-            </table>
+        <section class="busqueda-section">
+            <div class="acciones-busqueda" style="margin-bottom: 1.5rem;">
+                <span class="contador-texto">Inventario General</span>
+                <!-- Botón azul de tu página (.btn-agregar) -->
+                <button id="btn-nuevo-producto" class="btn-agregar" type="button" style="width: auto; padding: 0.6rem 1.2rem;">
+                    + Añadir Nuevo Producto
+                </button>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table class="tabla-admin">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Stock</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-productos-body">
+
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <!-- Modal de formulario -->
         <div id="modal-agregar-producto" class="modal-overlay">
             <div class="modal-contenido">
                 <div class="modal-header">
-                    <h3>Añadir Nuevo Producto</h3>
+                    <h3 class="titulo-encuadrado" style="margin: 0;">Añadir Producto</h3>
                     <button id="btn-cerrar-modal" class="btn-cerrar" type="button">&times;</button>
                 </div>
 
-                <form id="form-producto" novalidate>
-                    <div class="form-grupo">
+                <form id="form-producto" novalidate style="margin-top: 1rem;">
+                    <div class="campo-grupo" style="margin-bottom: 1rem;">
                         <label for="input-codigo">Código del Producto:</label>
                         <input type="text" id="input-codigo" placeholder="Ej: GA006" autocomplete="off">
-                        <span id="error-codigo" class="msj-error"></span>
+                        <span id="error-codigo" class="mensaje-error"></span>
                     </div>
 
-                    <div class="form-grupo">
-                        <label for="input-nombre">Nombre:</label>
+                    <div class="campo-grupo" style="margin-bottom: 1rem;">
+                        <label for="input-nombre">Nombre del Producto:</label>
                         <input type="text" id="input-nombre" placeholder="Nombre del instrumento" autocomplete="off">
-                        <span id="error-nombre" class="msj-error"></span>
+                        <span id="error-nombre" class="mensaje-error"></span>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-grupo">
+                    <div class="filtros-container" style="margin-bottom: 1rem;">
+                        <div class="campo-grupo">
                             <label for="input-marca">Marca:</label>
-                            <input type="text" id="input-marca" placeholder="Ej: Yamaha" autocomplete="on">
-                            <span id="error-marca" class="msj-error"></span>
+                            <input type="text" id="input-marca" placeholder="Ej: Yamaha">
+                            <span id="error-marca" class="mensaje-error"></span>
                         </div>
-                        <div class="form-grupo">
+                        <div class="campo-grupo">
                             <label for="input-modelo">Modelo:</label>
-                            <input type="text" id="input-modelo" placeholder="Ej: F310" autocomplete="off">
-                            <span id="error-modelo" class="msj-error"></span>
+                            <input type="text" id="input-modelo" placeholder="Ej: F310">
+                            <span id="error-modelo" class="mensaje-error"></span>
                         </div>
                     </div>
 
-                    <div class="form-grupo">
+                    <div class="campo-grupo" style="margin-bottom: 1rem;">
                         <label for="select-categoria-admin">Categoría:</label>
                         <select id="select-categoria-admin">
                             <option value="">Seleccione una categoría...</option>
@@ -99,23 +107,23 @@
                             <option value="Accesorios">Accesorios</option>
                             <option value="Estudio y Grabación">Estudio y Grabación</option>
                         </select>
-                        <span id="error-categoria" class="msj-error"></span>
+                        <span id="error-categoria" class="mensaje-error"></span>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-grupo">
+                    <div class="filtros-container" style="margin-bottom: 1rem;">
+                        <div class="campo-grupo">
                             <label for="input-precio">Precio ($):</label>
                             <input type="number" id="input-precio" min="1" placeholder="Ej: 150000">
-                            <span id="error-precio" class="msj-error"></span>
+                            <span id="error-precio" class="mensaje-error"></span>
                         </div>
-                        <div class="form-grupo">
+                        <div class="campo-grupo">
                             <label for="input-stock">Stock Inicial:</label>
                             <input type="number" id="input-stock" min="0" placeholder="Ej: 10">
-                            <span id="error-stock" class="msj-error"></span>
+                            <span id="error-stock" class="mensaje-error"></span>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-guardar">Guardar Producto</button>
+                    <button type="submit" class="btn-agregar" style="margin-top: 1rem;">Guardar Producto</button>
                 </form>
             </div>
         </div>
