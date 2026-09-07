@@ -75,12 +75,18 @@ body {
 }
 
 .mensaje-error {
-    color: var(--error);
-    font-size: 0.75rem;
-    margin-top: 0.2rem;
-    display: none;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin:1rem 0;
 }
-
+.mensaje-error h3,
+.mensaje-error p {
+    color: var(--error);
+}
 .acciones-busqueda {
     margin-top: 1rem;
     display: flex;
