@@ -1,4 +1,5 @@
 const productos = [
+
   {
     codigo: "GA001",
     categoria: "Guitarras Acústicas",
