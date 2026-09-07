@@ -42,3 +42,17 @@
     padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;
 }
 
+.form-grupo input.input-error, .form-grupo select.input-error { 
+    border: 2px solid #e74c3c; background-color: #fdf0ed;
+}
+.msj-error { 
+    color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: none; font-weight: bold;
+}
+.btn-guardar { 
+    background-color: #2ecc71; color: white; border: none; padding: 12px; 
+    cursor: pointer; border-radius: 4px; width: 100%; font-size: 16px; font-weight: bold;
+    margin-top: 10px; transition: background 0.3s;
+}
+.btn-guardar:hover { background-color: #27ae60; }
+
+
