@@ -1,14 +1,14 @@
 var imagenesCategoria = {
-  "Guitarras Acústicas": "assets/img/guitarra-acustica.jpg",
-  "Guitarras Eléctricas": "assets/img/guitarra-electrica.jpg",
-  "Bajos Eléctricos": "assets/img/bajo.jpg",
-  "Baterías": "assets/img/bateria.jpg",
-  "Teclados y Pianos": "assets/img/teclado.jpg",
-  "Amplificadores": "assets/img/amplificador.jpg",
-  "Micrófonos": "assets/img/microfono.jpg",
-  "Pedales de Efectos": "assets/img/pedal.jpg",
-  "Accesorios": "assets/img/accesorios.jpg",
-  "Estudio y Grabación": "assets/img/estudio.jpg"
+  "Guitarras Acústicas": "img/guitarra-acustica.jpg",
+  "Guitarras Eléctricas": "img/guitarra-electrica.jpg",
+  "Bajos Eléctricos": "img/bajo.jpg",
+  "Baterías": "img/bateria.jpg",
+  "Teclados y Pianos": "img/teclado.jpg",
+  "Amplificadores": "img/amplificador.jpg",
+  "Micrófonos": "img/microfono.jpg",
+  "Pedales de Efectos": "img/pedal.jpg",
+  "Accesorios": "img/accesorios.jpg",
+  "Estudio y Grabación": "img/estudio.jpg"
 };
 
 var porcentajeDescuento = 0;

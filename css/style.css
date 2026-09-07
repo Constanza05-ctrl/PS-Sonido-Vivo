@@ -243,7 +243,6 @@ body {
     margin: 0.6rem 0;
 }
 
-/* Monto destacado */
 .resumen-detalle .monto-destacado {
     font-size: 1.4rem;
     color: var(--primary);
@@ -348,4 +347,9 @@ body {
     text-align: center;
     border: 1px solid #e2e8f0;
     color: #64748b;
+}
+.nav-principal a.activo {
+    font-weight: 700;
+    border-bottom: 2px solid white;
+    padding-bottom: 2px;
 }

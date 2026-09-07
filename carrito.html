@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proceso de Compra</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/productos.js" defer></script>
+    <script src="js/carrito.js" defer></script>
 </head>
 <body>
 
@@ -13,10 +15,10 @@
         <nav class="nav-principal">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="carrito.html">Carrito</a></li>
+                <li><a href="carrito.html" class="activo">Carrito</a></li>
                 <li>
                     <a href="login.html" class="link-perfil" aria-label="Perfil de usuario">
-                        <img src="assets/img/user-icon.svg" alt="Perfil" class="icono-perfil">
+                        <img src="img/user-icon.svg" alt="Perfil" class="icono-perfil">
                     </a>
                 </li>
             </ul>
@@ -24,14 +26,12 @@
     </header>
 
     <main class="contenedor">
-        
         <h2 class="titulo-encuadrado">Tu Carrito de Compras</h2>
         <p>Revisa tus productos seleccionados antes de finalizar la compra.</p>
 
         <div id="mensaje-compra" class="mensaje-estado"></div>
 
         <section class="carrito-layout">
-            
             <section class="seccion-productos-carrito">
                 <div id="contenedor-items-carrito">
                     <p class="mensaje-vacio">Cargando productos del carrito...</p>
@@ -65,16 +65,12 @@
                     <button id="btn-vaciar" class="btn-limpiar" type="button">Vaciar Carrito</button>
                 </p>
             </aside>
-
         </section>
-
     </main>
 
     <footer class="footer-principal">
         <p>&copy; 2026 Sonido Vivo. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="js/productos.js"></script>
-    <script src="js/carrito.js"></script>
 </body>
 </html>
