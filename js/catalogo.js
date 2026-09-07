@@ -85,9 +85,9 @@ function filtrarProductos() {
 
   var productosFiltrados = productos.filter(function(p) {
     var coincideTexto = p.nombre.toLowerCase().includes(texto) ||
-                         p.marca.toLowerCase().includes(texto) ||
-                         p.modelo.toLowerCase().includes(texto) ||
-                         p.codigo.toLowerCase().includes(texto);
+                        p.marca.toLowerCase().includes(texto) ||
+                        p.modelo.toLowerCase().includes(texto) ||
+                        p.codigo.toLowerCase().includes(texto);
 
     var coincideCategoria = categoriaSeleccionada === 'Todas' || 
                             categoriaSeleccionada === '' || 
