@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso de Compra</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/productos.js" defer></script>
+    <script src="js/carrito.js" defer></script>
+</head>
+<body>
+
+    <header class="header-principal">
+        <h1>Sonido Vivo</h1>
+        <nav class="nav-principal">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="carrito.html" class="activo">Carrito</a></li>
+                <li>
+                    <a href="admin.html" class="link-perfil" aria-label="Perfil de usuario">
+                        <img src="img/user-icon.svg" alt="Administracion" class="icono-perfil">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <h2 class="titulo-encuadrado">Tu Carrito de Compras</h2>
+        <p>Revisa tus productos seleccionados antes de finalizar la compra.</p>
+
+        <div id="mensaje-compra" class="mensaje-estado"></div>
+
+        <section class="carrito-layout">
+            <section class="seccion-productos-carrito">
+                <div id="contenedor-items-carrito">
+                    <p class="mensaje-vacio">Cargando productos del carrito...</p>
+                </div>
+            </section>
+
+            <aside class="panel-resumen">
+                <h3 class="titulo-encuadrado">Resumen del Pedido</h3>
+                
+                <section class="resumen-detalle">
+                    <p><strong>Subtotal:</strong> <strong id="resumen-subtotal">CLP $0</strong></p>
+                    <p><strong>Envío:</strong> <strong id="resumen-envio">Por calcular</strong></p>
+                    
+                    <div class="bloque-cupon">
+                        <label for="input-cupon"><strong>Código de Descuento:</strong></label>
+                        <div class="cupon-input-grupo">
+                            <input type="text" id="input-cupon" placeholder="Ej: DUOCUC10">
+                            <button id="btn-cupon" class="btn-limpiar" type="button">Aplicar</button>
+                        </div>
+                        <p id="mensaje-cupon" class="mensaje-estado"></p>
+                    </div>
+
+                    <hr>
+                    <p class="monto-destacado">
+                        <strong>Total:</strong> <strong id="resumen-total">CLP $0</strong>
+                    </p>
+                </section>
+
+                <p class="acciones-resumen">
+                    <button id="btn-comprar" class="btn-agregar" type="button">Proceder al Pago</button>
+                    <button id="btn-vaciar" class="btn-limpiar" type="button">Vaciar Carrito</button>
+                    <a href="index.html" class="btn-volver">Seguir Comprando</a>
+                </p>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="footer-principal">
+        <p>&copy; 2026 Sonido Vivo. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>
