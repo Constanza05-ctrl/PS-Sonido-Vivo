@@ -38,6 +38,12 @@ body {
     font-weight: 500;
 }
 
+.nav-principal a.activo {
+    font-weight: 700;
+    border-bottom: 2px solid white;
+    padding-bottom: 2px;
+}
+
 .contenedor {
     max-width: 1200px;
     margin: 2rem auto;
@@ -146,6 +152,7 @@ body {
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-weight: 600;
+    display: inline-block;
 }
 
 .precio {
@@ -164,6 +171,11 @@ body {
     cursor: pointer;
     width: 100%;
     font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn-agregar:hover {
+    opacity: 0.9;
 }
 
 .seccion-video {
@@ -197,6 +209,7 @@ body {
     padding: 1.5rem;
     margin-top: 3rem;
 }
+
 .titulo-encuadrado {
     border: 2px solid var(--primary);
     padding: 0.4rem 0.8rem;
@@ -215,6 +228,7 @@ body {
     height: 24px;
     filter: invert(1);
 }
+
 .carrito-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -248,6 +262,7 @@ body {
     color: var(--primary);
     margin-top: 1rem;
 }
+
 .bloque-cupon {
     margin: 1.2rem 0;
 }
@@ -264,6 +279,7 @@ body {
     border: 1px solid #cbd5e1;
     border-radius: 4px;
 }
+
 .mensaje-estado {
     font-size: 0.85rem;
     font-weight: 600;
@@ -362,4 +378,96 @@ body {
     text-decoration: none;
     border-radius: 5px;
     text-align: center;
+}
+.tabla-contenedor {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.tabla-admin {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabla-admin thead {
+    background-color: var(--primary);
+    color: white;
+}
+
+.tabla-admin th, 
+.tabla-admin td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla-admin tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.btn-accion-tabla {
+    padding: 0.3rem 0.6rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.btn-editar-item {
+    background-color: var(--accent);
+    color: white;
+    margin-right: 0.3rem;
+}
+
+.btn-eliminar-item {
+    background-color: var(--error);
+    color: white;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-overlay.modal-visible {
+    display: flex;
+}
+
+.modal-contenido {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+
+.btn-cerrar {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    font-weight: bold;
 }
