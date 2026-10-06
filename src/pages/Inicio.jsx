@@ -19,10 +19,9 @@ function Inicio() {
         </p>
 
         <div className="mt-4">
-          <Button
-            texto="Explorar catálogo"
-            onClick={() => navigate('/catalogo')}
-          />
+          <Button onClick={() => navigate('/catalogo')}>
+              Explorar catálogo
+          </Button>
         </div>
       </div>
 
