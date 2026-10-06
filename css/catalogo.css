@@ -1,13 +1,17 @@
 :root {
-    --primary: #1e293b;
+    --primary: #0f172a;
     --accent: #2563eb;
+    --accent-hover: #1d4ed8;
     --error: #dc2626;
     --bg: #f8fafc;
-    --text: #0f172a;
+    --surface: #ffffff;
+    --text: #020617;
+    --text-muted: #334155;
+    --border: #cbd5e1;
 }
 
 body {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
@@ -16,25 +20,33 @@ body {
 
 .header-principal {
     background-color: var(--primary);
-    color: white;
+    color: #ffffff;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    -webkit-text-stroke: 0.5px #000000;
+    text-shadow: 0 0 1px #000000;
 }
 
 .nav-principal ul {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
 }
 
 .nav-principal a {
-    color: white;
+    color: #f1f5f9;
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.nav-principal a:hover {
+    color: #ffffff;
+    -webkit-text-stroke: 0.5px #000000;
 }
 
 .contenedor {
@@ -43,17 +55,28 @@ body {
     padding: 0 1rem;
 }
 
+.catalogo-seccion,
 .busqueda-section {
-    background: white;
+    background: var(--surface);
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
     margin-bottom: 2rem;
+}
+
+.catalogo-titulo,
+.busqueda-titulo {
+    color: var(--text);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 .filtros-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
 }
 
@@ -63,32 +86,46 @@ body {
 }
 
 .campo-grupo label {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.85rem;
     margin-bottom: 0.3rem;
+    color: var(--text);
 }
 
-.campo-grupo input, .campo-grupo select {
-    padding: 0.5rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
+.campo-grupo input, 
+.campo-grupo select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.campo-grupo input:focus, 
+.campo-grupo select:focus {
+    outline: 2px solid var(--accent);
+    border-color: transparent;
 }
 
 .mensaje-error {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 2rem;
-    background: #f8d7da;
-    border: 1px solid #f5c6cb;
+    padding: 1.5rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
     border-radius: 8px;
-    margin:1rem 0;
+    margin: 1rem 0;
 }
+
 .mensaje-error h3,
 .mensaje-error p {
     color: var(--error);
+    margin: 0.25rem 0;
 }
+
 .acciones-busqueda {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -96,8 +133,8 @@ body {
 
 .contador-texto {
     font-size: 0.9rem;
-    color: #64748b;
-    font-weight: 600;
+    color: var(--text-muted);
+    font-weight: 700;
 }
 
 .btn-limpiar {
@@ -107,6 +144,11 @@ body {
     cursor: pointer;
     text-decoration: underline;
     font-weight: 600;
+    padding: 0;
+}
+
+.btn-limpiar:hover {
+    color: var(--accent-hover);
 }
 
 .grid-productos {
@@ -116,64 +158,93 @@ body {
 }
 
 .tarjeta-producto {
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta-producto h3,
+.tarjeta-producto h4,
+.producto-titulo {
+    color: var(--text);
+    font-weight: 700;
+    margin: 0.5rem 0 0.25rem 0;
 }
 
 .imagen-contenedor {
-  width: 100%;
-  height: 180px;
-  background-color: #f8f9fa;
-  border-radius: 6px 6px 0 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+    width: 100%;
+    height: 180px;
+    background-color: #f8fafc;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .imagen-contenedor img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 8px;
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+    display: block;
 }
 
 .categoria-tag {
+    align-self: flex-start;
     font-size: 0.75rem;
     background: #e0e7ff;
-    color: #3730a3;
+    color: #1e1b4b;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .precio {
     font-size: 1.25rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0.5rem 0;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0.25rem 0;
 }
 
 .btn-agregar {
     background-color: var(--accent);
     color: white;
     border: none;
-    padding: 0.6rem;
-    border-radius: 4px;
+    padding: 0.65rem;
+    border-radius: 6px;
     cursor: pointer;
     width: 100%;
     font-weight: 600;
+    transition: background-color 0.2s ease;
+    -webkit-text-stroke: 0.5px #000000;
+    text-shadow: 0 0 1px #000000;
+}
+
+.btn-agregar:hover {
+    background-color: var(--accent-hover);
 }
 
 .seccion-video {
     margin-top: 3rem;
     text-align: center;
+}
+
+.seccion-video h2,
+.seccion-video h3 {
+    color: var(--text);
+    font-weight: 800;
 }
 
 .video-container {
@@ -184,6 +255,7 @@ body {
     max-width: 100%;
     margin: 1.5rem auto;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .video-container iframe {
@@ -197,7 +269,7 @@ body {
 
 .footer-principal {
     background-color: var(--primary);
-    color: white;
+    color: #cbd5e1;
     text-align: center;
     padding: 1.5rem;
     margin-top: 3rem;
