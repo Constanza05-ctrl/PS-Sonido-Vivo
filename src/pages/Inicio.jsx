@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/atoms/Button'
+import PublicTemplate from '../components/templates/PublicTemplate'
 
 function Inicio() {
   const navigate = useNavigate()
 
   return (
-    <div className="container mt-5">
-      
-      <div className="text-center py-5">
+    <PublicTemplate>
+      <section className="container text-center my-5 py-5">
         <h1 className="display-4">Sonido Vivo</h1>
 
         <h2 className="mt-3">
@@ -18,14 +18,14 @@ function Inicio() {
           Encuentra instrumentos y equipos para tus necesidades musicales.
         </p>
 
-        <div className="mt-4">
-          <Button onClick={() => navigate('/catalogo')}>
-              Explorar catálogo
-          </Button>
-        </div>
-      </div>
-
-    </div>
+        <Button
+          className="btn btn-primary mt-4"
+          onClick={() => navigate('/catalogo')}
+        >
+          Explorar catálogo
+        </Button>
+      </section>
+    </PublicTemplate>
   )
 }
 
