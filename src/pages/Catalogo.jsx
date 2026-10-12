@@ -1,12 +1,12 @@
-function Catalogo() {
-  return (
-    <div className="container mt-5 text-center">
-      <h1>Catálogo</h1>
 
-      <p>
-        Explora nuestros instrumentos y equipos de sonido.
-      </p>
-    </div>
+import { useProductos } from '../context/ProductoContext'
+import CatalogoTemplate from '../components/templates/CatalogoTemplate'
+
+function Catalogo() {
+  const { productos } = useProductos()
+
+  return (
+    <CatalogoTemplate productos={productos} />
   )
 }
 
