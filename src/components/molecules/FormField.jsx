@@ -1,34 +1,24 @@
+
 import Label from "../atoms/Label"
 import Input from "../atoms/Input"
 
 function FormField({
   id,
   etiqueta,
-  tipo,
-  placeholder = "",
+  tipo = "text",
+  placeholder,
   valor,
-  onChange,
-  label,
-  name,
-  type,
-  value,
-  required = false
+  onChange
 }) {
-  const fieldId = id ?? name
-  const fieldLabel = etiqueta ?? label
-  const fieldType = tipo ?? type ?? "text"
-  const fieldValue = valor ?? value
-
   return (
     <div className="mb-3">
-      <Label texto={fieldLabel} htmlFor={fieldId} />
+      <Label texto={etiqueta} htmlFor={id} />
       <Input
-        id={fieldId}
-        tipo={fieldType}
+        id={id}
+        tipo={tipo}
         placeholder={placeholder}
-        valor={fieldValue}
+        valor={valor}
         onChange={onChange}
-        required={required}
       />
     </div>
   )
