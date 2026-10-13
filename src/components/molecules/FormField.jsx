@@ -13,7 +13,6 @@ function FormField({
   return (
     <div className="mb-3">
       <Label texto={etiqueta} htmlFor={id} />
-
       <Input
         id={id}
         tipo={tipo}
@@ -26,4 +25,3 @@ function FormField({
 }
 
 export default FormField
-
