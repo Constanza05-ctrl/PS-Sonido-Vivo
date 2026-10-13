@@ -1,33 +1,27 @@
 
+import Label from "../atoms/Label"
+import Input from "../atoms/Input"
+
 function FormField({
-  label,
-  name,
-  type = "text",
-  value,
-  onChange,
-  placeholder = "",
-  required = false
+  id,
+  etiqueta,
+  tipo = "text",
+  placeholder,
+  valor,
+  onChange
 }) {
   return (
     <div className="mb-3">
-      <label htmlFor={name} className="form-label">
-        {label}
-      </label>
-
-      <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
+      <Label texto={etiqueta} htmlFor={id} />
+      <Input
+        id={id}
+        tipo={tipo}
         placeholder={placeholder}
-        required={required}
-        className="form-control"
+        valor={valor}
+        onChange={onChange}
       />
     </div>
-  );
+  )
 }
 
-export default FormField;
-
- 
+export default FormField
