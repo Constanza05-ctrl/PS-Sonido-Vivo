@@ -19,6 +19,7 @@ function Checkout() {
   const [telefono, setTelefono] = useState('')
   const [tipoEntrega, setTipoEntrega] = useState('retiro')
   const [direccion, setDireccion] = useState('')
+  const [metodoPago, setMetodoPago] = useState('')
   const [compraConfirmada, setCompraConfirmada] = useState(null)
   const [errorConfirmacion, setErrorConfirmacion] = useState('')
 
@@ -42,6 +43,11 @@ function Checkout() {
       return
     }
 
+    if (!metodoPago) {
+      setErrorConfirmacion('Selecciona un método de pago.')
+      return
+    }
+
     const pedido = {
       numeroPedido: `SV-${Date.now()}`,
       fecha: new Date().toISOString(),
@@ -53,6 +59,7 @@ function Checkout() {
       },
       tipoEntrega,
       direccion: tipoEntrega === 'despacho' ? direccion.trim() : '',
+      metodoPago,
       productos: items.map(item => ({
         ...item,
         precio: Number(item.precio),
@@ -66,16 +73,14 @@ function Checkout() {
     }
 
     try {
-      // Primero guardamos el pedido completo.
       guardarPedido(pedido)
     } catch {
       setErrorConfirmacion(
-        'No pudimos guardar tu pedido. Tu carrito se mantiene intacto. Inténtalo nuevamente.'
+        'No pudimos registrar tu pedido. Tu carrito se mantiene intacto. Puedes intentarlo nuevamente.'
       )
       return
     }
 
-    // Solo vaciamos el carrito después de guardar el pedido.
     vaciarCarrito()
     setCompraConfirmada(pedido)
   }
@@ -126,6 +131,10 @@ function Checkout() {
               </p>
             )}
 
+            <p>
+              <strong>Método de pago:</strong> {pedido.metodoPago}
+            </p>
+
             <h3 className="h5 mt-4">Productos comprados</h3>
 
             <ul className="list-group mb-3">
@@ -155,12 +164,17 @@ function Checkout() {
             </p>
 
             <p className="d-flex justify-content-between fw-bold fs-5">
-              <span>Total pagado</span>
+              <span>Total de la compra</span>
               <span>{formatoPrecio.format(pedido.total)}</span>
             </p>
 
             <p className="text-secondary mb-0">
               Estado del pedido: {pedido.estado}
+            </p>
+
+            <p className="text-secondary small mt-2 mb-0">
+              El método de pago es simulado para esta evaluación.
+              No se ha procesado ningún pago real.
             </p>
           </div>
         </section>
@@ -310,9 +324,43 @@ function Checkout() {
               )}
             </fieldset>
 
+            <fieldset className="border rounded p-3 mb-4">
+              <legend className="float-none w-auto px-2">
+                Método de pago
+              </legend>
+
+              <div className="mb-3">
+                <label htmlFor="metodoPago" className="form-label">
+                  Selecciona cómo pagarás
+                </label>
+
+                <select
+                  id="metodoPago"
+                  className="form-select"
+                  value={metodoPago}
+                  onChange={evento => setMetodoPago(evento.target.value)}
+                  required
+                >
+                  <option value="">Selecciona un método de pago</option>
+                  <option value="Tarjeta de crédito/débito">
+                    Tarjeta de crédito/débito
+                  </option>
+                  <option value="Transferencia bancaria">
+                    Transferencia bancaria
+                  </option>
+                  <option value="Efectivo al retirar o recibir">
+                    Efectivo al retirar o recibir
+                  </option>
+                </select>
+              </div>
+            </fieldset>
+
             {errorConfirmacion && (
               <div className="alert alert-danger" role="alert">
-                {errorConfirmacion}
+                <p className="mb-2">{errorConfirmacion}</p>
+                <button type="submit" className="btn btn-outline-danger">
+                  Reintentar registro del pedido
+                </button>
               </div>
             )}
 
@@ -363,7 +411,7 @@ function Checkout() {
               </p>
 
               <p className="text-secondary small">
-                El costo de despacho corresponde al 10 % del subtotal.
+                El despacho corresponde al 10 % del subtotal.
                 El retiro en tienda es gratuito.
               </p>
 

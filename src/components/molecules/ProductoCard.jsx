@@ -1,4 +1,6 @@
 
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useCarrito } from '../../context/CarritoContext'
 
 const formatoPrecio = new Intl.NumberFormat('es-CL', {
@@ -9,9 +11,11 @@ const formatoPrecio = new Intl.NumberFormat('es-CL', {
 
 function ProductoCard({ producto }) {
   const { agregarAlCarrito } = useCarrito()
+  const [agregado, setAgregado] = useState(false)
 
   function manejarAgregarAlCarrito() {
     agregarAlCarrito(producto)
+    setAgregado(true)
   }
 
   return (
@@ -41,12 +45,20 @@ function ProductoCard({ producto }) {
           className="btn btn-primary mt-auto"
           type="button"
           onClick={manejarAgregarAlCarrito}
-          disabled={Number(producto.stock) <= 0}
         >
-          {Number(producto.stock) <= 0
-            ? 'Sin stock'
-            : 'Agregar al carrito'}
+          Agregar al carrito
         </button>
+
+        {agregado && (
+          <div className="alert alert-success mt-3 mb-0" role="status">
+            <p className="mb-2">
+              ¡Producto agregado al carrito!
+            </p>
+            <Link to="/carrito" className="alert-link">
+              Ver mi carrito
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )
