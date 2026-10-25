@@ -1,32 +1,64 @@
 
 import { productos as productosIniciales } from '../data/productos'
 
-let productos = [...productosIniciales]
+const STORAGE_KEY = 'sonido-vivo-productos'
 
-// Obtener todos los productos
+function guardarProductos(productos) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(productos))
+}
+
+function leerProductos() {
+  const datosGuardados = localStorage.getItem(STORAGE_KEY)
+
+  if (datosGuardados === null) {
+    const iniciales = [...productosIniciales]
+    guardarProductos(iniciales)
+    return iniciales
+  }
+
+  try {
+    const productosGuardados = JSON.parse(datosGuardados)
+
+    if (Array.isArray(productosGuardados)) {
+      return productosGuardados
+    }
+  } catch {
+    
+  }
+
+  const iniciales = [...productosIniciales]
+  guardarProductos(iniciales)
+  return iniciales
+}
+
+
 export function obtenerProductos() {
-  return productos
+  return leerProductos()
 }
 
-// Obtener un producto por su ID
+
 export function obtenerProductoPorId(id) {
-  return productos.find(producto => producto.id === id)
+  return leerProductos().find(producto => producto.id === id)
 }
 
-// Agregar un producto
+
 export function agregarProducto(nuevoProducto) {
+  const productos = leerProductos()
+
   const producto = {
     ...nuevoProducto,
     id: Date.now()
   }
 
   productos.push(producto)
+  guardarProductos(productos)
 
   return producto
 }
 
-// Modificar un producto
+
 export function actualizarProducto(id, datosActualizados) {
+  const productos = leerProductos()
   const indice = productos.findIndex(producto => producto.id === id)
 
   if (indice === -1) {
@@ -39,14 +71,23 @@ export function actualizarProducto(id, datosActualizados) {
     id: productos[indice].id
   }
 
+  guardarProductos(productos)
+
   return productos[indice]
 }
 
-// Eliminar un producto
+
 export function eliminarProducto(id) {
-  const cantidadInicial = productos.length
+  const productos = leerProductos()
+  const productosActualizados = productos.filter(
+    producto => producto.id !== id
+  )
 
-  productos = productos.filter(producto => producto.id !== id)
+  if (productosActualizados.length === productos.length) {
+    return false
+  }
 
-  return productos.length < cantidadInicial
+  guardarProductos(productosActualizados)
+
+  return true
 }
