@@ -24,6 +24,20 @@ function Inicio() {
         >
           Explorar catálogo
         </Button>
+
+        {/* Sección del video de presentación con YouTube */}
+        <div className="row justify-content-center mt-5">
+          <div className="col-12 col-md-8">
+            <h3 className="h4 mb-3">Conoce más sobre nosotros</h3>
+            <div className="ratio ratio-16x9 shadow rounded overflow-hidden">
+              <iframe
+                src="https://www.youtube.com/embed/QObBo9NwQAM"
+                title="Prueba de sonido - Sonido Vivo"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
       </section>
     </PublicTemplate>
   )

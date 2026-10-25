@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import CatalogoTemplate from './CatalogoTemplate'
+import { CarritoProvider } from '../../context/CarritoContext'
 
 describe('CatalogoTemplate', () => {
   const props = {
@@ -14,7 +15,11 @@ describe('CatalogoTemplate', () => {
   }
 
   it('muestra el título y la descripción del catálogo', () => {
-    render(<CatalogoTemplate {...props} />)
+    render(
+      <CarritoProvider>
+        <CatalogoTemplate {...props} />
+      </CarritoProvider>
+    )
 
     expect(
       screen.getByRole('heading', { name: 'Catálogo de productos' })
@@ -37,13 +42,21 @@ describe('CatalogoTemplate', () => {
       }
     ]
 
-    render(<CatalogoTemplate {...props} productos={productos} />)
+    render(
+      <CarritoProvider>
+        <CatalogoTemplate {...props} productos={productos} />
+      </CarritoProvider>
+    )
 
     expect(screen.getByText('Guitarra eléctrica')).toBeInTheDocument()
   })
 
   it('muestra los controles de búsqueda y categoría', () => {
-    render(<CatalogoTemplate {...props} />)
+    render(
+      <CarritoProvider>
+        <CatalogoTemplate {...props} />
+      </CarritoProvider>
+    )
 
     expect(
       screen.getByRole('textbox', { name: 'Buscar producto' })
@@ -58,4 +71,3 @@ describe('CatalogoTemplate', () => {
     ).toBeInTheDocument()
   })
 })
-
