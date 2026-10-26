@@ -1,5 +1,6 @@
 
 import { productos as productosIniciales } from '../data/productos'
+import { validarProducto } from '../utils/validarProducto'
 
 const STORAGE_KEY = 'sonido-vivo-productos'
 
@@ -42,11 +43,22 @@ export function obtenerProductoPorId(id) {
 }
 
 
+
 export function agregarProducto(nuevoProducto) {
+  const validacion = validarProducto(nuevoProducto)
+
+  if (!validacion.valido) {
+    const error = new Error('El producto contiene datos inválidos.')
+    error.errores = validacion.errores
+    throw error
+  }
+
   const productos = leerProductos()
 
   const producto = {
     ...nuevoProducto,
+    stock: Number(nuevoProducto.stock),
+    precio: Number(nuevoProducto.precio),
     id: Date.now()
   }
 
@@ -57,6 +69,7 @@ export function agregarProducto(nuevoProducto) {
 }
 
 
+
 export function actualizarProducto(id, datosActualizados) {
   const productos = leerProductos()
   const indice = productos.findIndex(producto => producto.id === id)
@@ -65,16 +78,28 @@ export function actualizarProducto(id, datosActualizados) {
     return null
   }
 
-  productos[indice] = {
+  const productoActualizado = {
     ...productos[indice],
     ...datosActualizados,
+    stock: Number(datosActualizados.stock ?? productos[indice].stock),
+    precio: Number(datosActualizados.precio ?? productos[indice].precio),
     id: productos[indice].id
   }
 
+  const validacion = validarProducto(productoActualizado)
+
+  if (!validacion.valido) {
+    const error = new Error('El producto contiene datos inválidos.')
+    error.errores = validacion.errores
+    throw error
+  }
+
+  productos[indice] = productoActualizado
   guardarProductos(productos)
 
   return productos[indice]
 }
+
 
 
 export function eliminarProducto(id) {
