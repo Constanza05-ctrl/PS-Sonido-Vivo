@@ -67,34 +67,75 @@ La cobertura permite identificar qué partes del código fueron ejecutadas duran
 
 ## Estructura del proyecto
 
+## Estructura del proyecto
+
 ```text
 src/
+├── assets/
+│   ├── hero.png
+│   ├── react.svg
+│   └── vite.svg
 ├── components/
 │   ├── atoms/
 │   │   ├── Button.jsx
+│   │   ├── Button.test.jsx
+│   │   ├── CantidadInput.jsx
 │   │   ├── Input.jsx
 │   │   └── Label.jsx
 │   ├── molecules/
+│   │   ├── BarraBusqueda.jsx
+│   │   ├── CarritoItem.jsx
+│   │   ├── FiltroCategoria.jsx
 │   │   ├── FormField.jsx
-│   │   └── ProductoCard.jsx
+│   │   ├── FormField.test.jsx
+│   │   ├── ProductoCard.jsx
+│   │   └── ProductoCard.test.jsx
 │   ├── organisms/
-│   │   └── ListaProductos.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ListaCarrito.jsx
+│   │   ├── ListaProductos.jsx
+│   │   ├── ListaProductos.test.jsx
+│   │   ├── Navbar.jsx
+│   │   └── ResumenCarrito.jsx
 │   └── templates/
-│       └── CatalogoTemplate.jsx
+│       ├── CarritoTemplate.jsx
+│       ├── CatalogoTemplate.jsx
+│       ├── CatalogoTemplate.test.jsx
+│       └── PublicTemplate.jsx
 ├── context/
+│   ├── CarritoContext.jsx
 │   └── ProductoContext.jsx
 ├── data/
+│   ├── categorias.js
 │   └── productos.js
 ├── pages/
+│   ├── AdminProductos.jsx
+│   ├── Blog.jsx
+│   ├── Carrito.jsx
+│   ├── Catalogo.jsx
+│   ├── Checkout.jsx
+│   ├── Contacto.jsx
 │   ├── Inicio.jsx
-│   └── Catalogo.jsx
+│   ├── Nosotros.jsx
+│   ├── Perfil.jsx
+│   ├── ProductoDetalle.jsx
+│   └── ResultadoCompra.jsx
 ├── services/
-│   └── productoService.js
+│   ├── carritoService.js
+│   ├── productoService.js
+│   └── productoService.test.js
 ├── test/
+│   ├── PaginasPublicas.test.jsx
 │   └── setup.js
+├── utils/
+│   ├── precioProducto.js
+│   └── validarProducto.js
+├── App.css
 ├── App.jsx
+├── index.css
 └── main.jsx
 ```
+
 
 La estructura puede variar a medida que el equipo incorpore nuevas funcionalidades.
 
