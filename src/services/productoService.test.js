@@ -11,6 +11,19 @@ import {
 
 const STORAGE_KEY = 'sonido-vivo-productos'
 
+
+const crearProductoValido = (datos = {}) => ({
+  nombre: 'Guitarra de prueba',
+  categoria: 'Guitarras Acústicas',
+  marca: 'Yamaha',
+  modelo: 'F310',
+  stock: 5,
+  precio: 100000,
+  descripcion: 'Instrumento de prueba para verificar el servicio.',
+  ...datos
+})
+
+
 describe('Servicio de productos', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -28,10 +41,9 @@ describe('Servicio de productos', () => {
   })
 
   it('agrega un producto y lo guarda en localStorage', () => {
-    const producto = agregarProducto({
-      nombre: 'Guitarra',
-      precio: 100000
-    })
+   const producto = agregarProducto(
+  crearProductoValido({ nombre: 'Guitarra' })
+)
 
     expect(obtenerProductos()).toHaveLength(1)
     expect(obtenerProductoPorId(producto.id).nombre).toBe('Guitarra')
@@ -42,19 +54,25 @@ describe('Servicio de productos', () => {
   })
 
   it('busca un producto por ID', () => {
-    const producto = agregarProducto({
-      nombre: 'Micrófono',
-      precio: 30000
-    })
+    const producto = agregarProducto(
+  crearProductoValido({
+    nombre: 'Micrófono',
+    categoria: 'Micrófonos',
+    precio: 30000
+  })
+)
 
     expect(obtenerProductoPorId(producto.id).nombre).toBe('Micrófono')
   })
 
   it('actualiza un producto y persiste el cambio', () => {
-    const producto = agregarProducto({
-      nombre: 'Parlante',
-      precio: 50000
-    })
+    const producto = agregarProducto(
+  crearProductoValido({
+    nombre: 'Parlante',
+    categoria: 'Audio Pro y En vivo',
+    precio: 50000
+  })
+)
 
     actualizarProducto(producto.id, { precio: 60000 })
 
@@ -73,10 +91,13 @@ describe('Servicio de productos', () => {
   })
 
   it('elimina un producto y persiste la eliminación', () => {
-    const producto = agregarProducto({
-      nombre: 'Teclado',
-      precio: 80000
-    })
+   const producto = agregarProducto(
+  crearProductoValido({
+    nombre: 'Teclado',
+    categoria: 'Teclados y Pianos',
+    precio: 80000
+  })
+)
 
     expect(eliminarProducto(producto.id)).toBe(true)
     expect(obtenerProductos()).toHaveLength(0)

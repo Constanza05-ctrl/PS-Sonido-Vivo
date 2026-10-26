@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useProductos } from '../context/ProductoContext'
 import PublicTemplate from '../components/templates/PublicTemplate'
+import categorias from '../data/categorias'
 
 const formularioInicial = {
   nombre: '',
@@ -18,10 +19,7 @@ function AdminProductos() {
   const [formulario, setFormulario] = useState(formularioInicial)
   const [productoEnEdicion, setProductoEnEdicion] = useState(null)
   const [mensaje, setMensaje] = useState('')
-
-  const categorias = [
-    ...new Set(productos.map(producto => producto.categoria))
-  ].sort((a, b) => a.localeCompare(b, 'es'))
+  const [errores, setErrores] = useState({})
 
   function manejarCambio(evento) {
     const { name, value } = evento.target
@@ -30,60 +28,52 @@ function AdminProductos() {
       ...formulario,
       [name]: value
     })
+
+    setErrores(previos => ({
+      ...previos,
+      [name]: ''
+    }))
   }
 
   function limpiarFormulario() {
-    setFormulario(formularioInicial)
+    setFormulario({ ...formularioInicial })
     setProductoEnEdicion(null)
+    setErrores({})
   }
 
   function manejarEnvio(evento) {
     evento.preventDefault()
-
-    const nombre = formulario.nombre.trim()
-    const categoria = formulario.categoria.trim()
-    const marca = formulario.marca.trim()
-    const modelo = formulario.modelo.trim()
-    const descripcion = formulario.descripcion.trim()
-    const stock = Number(formulario.stock)
-    const precio = Number(formulario.precio)
-
-    if (
-      !nombre ||
-      !categoria ||
-      !marca ||
-      !modelo ||
-      !descripcion ||
-      formulario.stock === '' ||
-      formulario.precio === '' ||
-      !Number.isInteger(stock) ||
-      stock < 0 ||
-      !Number.isFinite(precio) ||
-      precio < 0
-    ) {
-      setMensaje('Completa todos los campos con valores válidos.')
-      return
-    }
+    setMensaje('')
+    setErrores({})
 
     const datosProducto = {
-      nombre,
-      categoria,
-      marca,
-      modelo,
-      stock,
-      precio,
-      descripcion
+      nombre: formulario.nombre.trim(),
+      categoria: formulario.categoria.trim(),
+      marca: formulario.marca.trim(),
+      modelo: formulario.modelo.trim(),
+      stock: formulario.stock,
+      precio: formulario.precio,
+      descripcion: formulario.descripcion.trim()
     }
 
-    if (productoEnEdicion) {
-      actualizarProducto(productoEnEdicion.id, datosProducto)
-      setMensaje('Producto actualizado correctamente.')
-    } else {
-      agregarProducto(datosProducto)
-      setMensaje('Producto agregado correctamente.')
-    }
+    try {
+      if (productoEnEdicion) {
+        actualizarProducto(productoEnEdicion.id, datosProducto)
+        setMensaje('Producto actualizado correctamente.')
+      } else {
+        agregarProducto(datosProducto)
+        setMensaje('Producto agregado correctamente.')
+      }
 
-    limpiarFormulario()
+      limpiarFormulario()
+    } catch (error) {
+      if (error.errores) {
+        setErrores(error.errores)
+        setMensaje('Revisa los campos indicados antes de guardar.')
+      } else {
+        setMensaje('No se pudo guardar el producto. Inténtalo nuevamente.')
+      }
+    }
   }
 
   function prepararEdicion(producto) {
@@ -97,6 +87,7 @@ function AdminProductos() {
       precio: String(producto.precio),
       descripcion: producto.descripcion
     })
+    setErrores({})
     setMensaje('')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -123,7 +114,12 @@ function AdminProductos() {
         <h1 className="mb-4">Administración de productos</h1>
 
         {mensaje && (
-          <div className="alert alert-info" role="status">
+          <div
+            className={`alert ${
+              Object.keys(errores).length > 0 ? 'alert-danger' : 'alert-info'
+            }`}
+            role="status"
+          >
             {mensaje}
           </div>
         )}
@@ -141,29 +137,40 @@ function AdminProductos() {
                   <input
                     id="nombre"
                     name="nombre"
-                    className="form-control"
+                    className={`form-control ${errores.nombre ? 'is-invalid' : ''}`}
                     value={formulario.nombre}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.nombre && (
+                    <div className="text-danger small mt-1">
+                      {errores.nombre}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-6">
                   <label htmlFor="categoria" className="form-label">Categoría</label>
-                  <input
+                  <select
                     id="categoria"
                     name="categoria"
-                    className="form-control"
-                    list="categorias-productos"
+                    className={`form-select ${errores.categoria ? 'is-invalid' : ''}`}
                     value={formulario.categoria}
                     onChange={manejarCambio}
                     required
-                  />
-                  <datalist id="categorias-productos">
+                  >
+                    <option value="">Selecciona una categoría</option>
                     {categorias.map(categoria => (
-                      <option key={categoria} value={categoria} />
+                      <option key={categoria} value={categoria}>
+                        {categoria}
+                      </option>
                     ))}
-                  </datalist>
+                  </select>
+                  {errores.categoria && (
+                    <div className="text-danger small mt-1">
+                      {errores.categoria}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-4">
@@ -171,11 +178,16 @@ function AdminProductos() {
                   <input
                     id="marca"
                     name="marca"
-                    className="form-control"
+                    className={`form-control ${errores.marca ? 'is-invalid' : ''}`}
                     value={formulario.marca}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.marca && (
+                    <div className="text-danger small mt-1">
+                      {errores.marca}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-4">
@@ -183,11 +195,16 @@ function AdminProductos() {
                   <input
                     id="modelo"
                     name="modelo"
-                    className="form-control"
+                    className={`form-control ${errores.modelo ? 'is-invalid' : ''}`}
                     value={formulario.modelo}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.modelo && (
+                    <div className="text-danger small mt-1">
+                      {errores.modelo}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-4">
@@ -198,11 +215,16 @@ function AdminProductos() {
                     type="number"
                     min="0"
                     step="1"
-                    className="form-control"
+                    className={`form-control ${errores.stock ? 'is-invalid' : ''}`}
                     value={formulario.stock}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.stock && (
+                    <div className="text-danger small mt-1">
+                      {errores.stock}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-6">
@@ -211,13 +233,18 @@ function AdminProductos() {
                     id="precio"
                     name="precio"
                     type="number"
-                    min="0"
+                    min="1"
                     step="1"
-                    className="form-control"
+                    className={`form-control ${errores.precio ? 'is-invalid' : ''}`}
                     value={formulario.precio}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.precio && (
+                    <div className="text-danger small mt-1">
+                      {errores.precio}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-12">
@@ -225,12 +252,17 @@ function AdminProductos() {
                   <textarea
                     id="descripcion"
                     name="descripcion"
-                    className="form-control"
+                    className={`form-control ${errores.descripcion ? 'is-invalid' : ''}`}
                     rows="3"
                     value={formulario.descripcion}
                     onChange={manejarCambio}
                     required
                   />
+                  {errores.descripcion && (
+                    <div className="text-danger small mt-1">
+                      {errores.descripcion}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -286,13 +318,15 @@ function AdminProductos() {
                       })}
                     </td>
                     <td>
-                      <span className={
-                        producto.stock === 0
-                          ? 'badge text-bg-danger'
-                          : producto.stock <= 3
-                            ? 'badge text-bg-warning'
-                            : 'badge text-bg-success'
-                      }>
+                      <span
+                        className={
+                          producto.stock === 0
+                            ? 'badge text-bg-danger'
+                            : producto.stock <= 3
+                              ? 'badge text-bg-warning'
+                              : 'badge text-bg-success'
+                        }
+                      >
                         {producto.stock}
                       </span>
                     </td>
