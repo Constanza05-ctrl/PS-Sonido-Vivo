@@ -28,11 +28,19 @@ function Navbar() {
                 Catálogo
               </NavLink>
             </li>
+
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/admin/productos">
+                Administración
+              </NavLink>
+            </li> 
+
           </ul>
         </div>
       </div>
     </nav>
   );
 }
+
 
 export default Navbar;
