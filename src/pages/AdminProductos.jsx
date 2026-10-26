@@ -15,11 +15,30 @@ const formularioInicial = {
 }
 
 function AdminProductos() {
-  const { productos, agregarProducto, actualizarProducto, eliminarProducto } = useProductos()
+  const {
+    productos,
+    agregarProducto,
+    actualizarProducto,
+    eliminarProducto
+  } = useProductos()
+
   const [formulario, setFormulario] = useState(formularioInicial)
   const [productoEnEdicion, setProductoEnEdicion] = useState(null)
   const [mensaje, setMensaje] = useState('')
   const [errores, setErrores] = useState({})
+
+  const productosAgotados = productos.filter(
+    producto => Number(producto.stock) === 0
+  ).length
+
+  const productosStockBajo = productos.filter(
+    producto => Number(producto.stock) > 0 &&
+      Number(producto.stock) <= 3
+  ).length
+
+  const productosStockNormal = productos.filter(
+    producto => Number(producto.stock) > 3
+  ).length
 
   function manejarCambio(evento) {
     const { name, value } = evento.target
@@ -116,7 +135,9 @@ function AdminProductos() {
         {mensaje && (
           <div
             className={`alert ${
-              Object.keys(errores).length > 0 ? 'alert-danger' : 'alert-info'
+              Object.keys(errores).length > 0
+                ? 'alert-danger'
+                : 'alert-info'
             }`}
             role="status"
           >
@@ -133,7 +154,9 @@ function AdminProductos() {
             <form onSubmit={manejarEnvio}>
               <div className="row g-3">
                 <div className="col-md-6">
-                  <label htmlFor="nombre" className="form-label">Nombre</label>
+                  <label htmlFor="nombre" className="form-label">
+                    Nombre
+                  </label>
                   <input
                     id="nombre"
                     name="nombre"
@@ -150,7 +173,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-md-6">
-                  <label htmlFor="categoria" className="form-label">Categoría</label>
+                  <label htmlFor="categoria" className="form-label">
+                    Categoría
+                  </label>
                   <select
                     id="categoria"
                     name="categoria"
@@ -174,7 +199,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-md-4">
-                  <label htmlFor="marca" className="form-label">Marca</label>
+                  <label htmlFor="marca" className="form-label">
+                    Marca
+                  </label>
                   <input
                     id="marca"
                     name="marca"
@@ -191,7 +218,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-md-4">
-                  <label htmlFor="modelo" className="form-label">Modelo</label>
+                  <label htmlFor="modelo" className="form-label">
+                    Modelo
+                  </label>
                   <input
                     id="modelo"
                     name="modelo"
@@ -208,7 +237,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-md-4">
-                  <label htmlFor="stock" className="form-label">Stock</label>
+                  <label htmlFor="stock" className="form-label">
+                    Stock
+                  </label>
                   <input
                     id="stock"
                     name="stock"
@@ -228,7 +259,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-md-6">
-                  <label htmlFor="precio" className="form-label">Precio (CLP)</label>
+                  <label htmlFor="precio" className="form-label">
+                    Precio (CLP)
+                  </label>
                   <input
                     id="precio"
                     name="precio"
@@ -248,7 +281,9 @@ function AdminProductos() {
                 </div>
 
                 <div className="col-12">
-                  <label htmlFor="descripcion" className="form-label">Descripción</label>
+                  <label htmlFor="descripcion" className="form-label">
+                    Descripción
+                  </label>
                   <textarea
                     id="descripcion"
                     name="descripcion"
@@ -286,7 +321,43 @@ function AdminProductos() {
         </section>
 
         <section>
-          <h2 className="h4 mb-3">Inventario ({productos.length})</h2>
+          <h2 className="h4 mb-3">
+            Inventario ({productos.length})
+          </h2>
+
+          <div className="row g-3 mb-4">
+            <div className="col-12 col-md-4">
+              <div className="card border-danger h-100">
+                <div className="card-body">
+                  <h3 className="h6 text-danger">Productos agotados</h3>
+                  <p className="display-6 mb-0">{productosAgotados}</p>
+                  <small className="text-muted">Stock igual a 0</small>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-4">
+              <div className="card border-warning h-100">
+                <div className="card-body">
+                  <h3 className="h6 text-warning-emphasis">Stock bajo</h3>
+                  <p className="display-6 mb-0">{productosStockBajo}</p>
+                  <small className="text-muted">
+                    Entre 1 y 3 unidades
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-4">
+              <div className="card border-success h-100">
+                <div className="card-body">
+                  <h3 className="h6 text-success">Stock normal</h3>
+                  <p className="display-6 mb-0">{productosStockNormal}</p>
+                  <small className="text-muted">Más de 3 unidades</small>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="table-responsive">
             <table className="table table-striped table-hover align-middle">
@@ -320,9 +391,9 @@ function AdminProductos() {
                     <td>
                       <span
                         className={
-                          producto.stock === 0
+                          Number(producto.stock) === 0
                             ? 'badge text-bg-danger'
-                            : producto.stock <= 3
+                            : Number(producto.stock) <= 3
                               ? 'badge text-bg-warning'
                               : 'badge text-bg-success'
                         }
@@ -368,3 +439,4 @@ function AdminProductos() {
 }
 
 export default AdminProductos
+
