@@ -65,7 +65,7 @@ npm run coverage
 
 La cobertura permite identificar qué partes del código fueron ejecutadas durante las pruebas.
 
-## Estructura del proyecto
+
 
 ## Estructura del proyecto
 
@@ -161,3 +161,6 @@ Actualmente, estos datos se gestionan en memoria; no se debe asumir que los camb
 Las pruebas utilizan Vitest y React Testing Library para comprobar el comportamiento de los componentes y las funciones del servicio.
 
 El resultado de cobertura debe consultarse ejecutando `npm run coverage`.
+
+## Documentación ERS V2 
+https://docs.google.com/document/d/1VJj6f65fubo8ImDs5jtAFvG0HsXK7jm0/edit?usp=sharing&ouid=117935060874167887386&rtpof=true&sd=true 
