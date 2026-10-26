@@ -12,6 +12,8 @@ import {
   limpiarCarritoGuardado
 } from '../services/carritoService'
 
+import { obtenerPrecioFinal } from '../utils/precioProducto'
+
 const CarritoContext = createContext(null)
 
 export function CarritoProvider({ children }) {
@@ -22,6 +24,8 @@ export function CarritoProvider({ children }) {
   }, [items])
 
   function agregarAlCarrito(producto) {
+    const precioFinal = obtenerPrecioFinal(producto)
+
     setItems(actuales => {
       const existente = actuales.find(
         item => item.id === producto.id
@@ -30,12 +34,26 @@ export function CarritoProvider({ children }) {
       if (existente) {
         return actuales.map(item =>
           item.id === producto.id
-            ? { ...item, cantidad: item.cantidad + 1 }
+            ? {
+                ...item,
+                precio: precioFinal,
+                enOferta: producto.enOferta,
+                descuento: producto.descuento,
+                cantidad: item.cantidad + 1
+              }
             : item
         )
       }
 
-      return [...actuales, { ...producto, cantidad: 1 }]
+      return [
+        ...actuales,
+        {
+          ...producto,
+          precio: precioFinal,
+          precioOriginal: Number(producto.precio) || 0,
+          cantidad: 1
+        }
+      ]
     })
   }
 
@@ -72,7 +90,7 @@ export function CarritoProvider({ children }) {
   )
 
   const totalCompra = items.reduce(
-    (total, item) => total + item.precio * item.cantidad,
+    (total, item) => total + (Number(item.precio) || 0) * item.cantidad,
     0
   )
 

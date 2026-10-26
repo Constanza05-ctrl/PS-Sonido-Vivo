@@ -24,7 +24,7 @@ function leerProductos() {
       return productosGuardados
     }
   } catch {
-    
+    // Si los datos guardados están dañados, se recuperan los iniciales.
   }
 
   const iniciales = [...productosIniciales]
@@ -32,43 +32,51 @@ function leerProductos() {
   return iniciales
 }
 
+function normalizarOferta(producto) {
+  const enOferta = producto.enOferta === true
+  const descuento = enOferta ? Number(producto.descuento) : 0
+
+  return {
+    enOferta,
+    descuento: Number.isFinite(descuento) ? descuento : 0
+  }
+}
+
+function lanzarErrorValidacion(errores) {
+  const error = new Error('El producto contiene datos inválidos.')
+  error.errores = errores
+  throw error
+}
 
 export function obtenerProductos() {
   return leerProductos()
 }
 
-
 export function obtenerProductoPorId(id) {
   return leerProductos().find(producto => producto.id === id)
 }
 
-
-
 export function agregarProducto(nuevoProducto) {
-  const validacion = validarProducto(nuevoProducto)
-
-  if (!validacion.valido) {
-    const error = new Error('El producto contiene datos inválidos.')
-    error.errores = validacion.errores
-    throw error
-  }
-
-  const productos = leerProductos()
-
   const producto = {
     ...nuevoProducto,
     stock: Number(nuevoProducto.stock),
     precio: Number(nuevoProducto.precio),
+    ...normalizarOferta(nuevoProducto),
     id: Date.now()
   }
 
+  const validacion = validarProducto(producto)
+
+  if (!validacion.valido) {
+    lanzarErrorValidacion(validacion.errores)
+  }
+
+  const productos = leerProductos()
   productos.push(producto)
   guardarProductos(productos)
 
   return producto
 }
-
-
 
 export function actualizarProducto(id, datosActualizados) {
   const productos = leerProductos()
@@ -78,20 +86,24 @@ export function actualizarProducto(id, datosActualizados) {
     return null
   }
 
+  const anterior = productos[indice]
+
   const productoActualizado = {
-    ...productos[indice],
+    ...anterior,
     ...datosActualizados,
-    stock: Number(datosActualizados.stock ?? productos[indice].stock),
-    precio: Number(datosActualizados.precio ?? productos[indice].precio),
-    id: productos[indice].id
+    stock: Number(datosActualizados.stock ?? anterior.stock),
+    precio: Number(datosActualizados.precio ?? anterior.precio),
+    ...normalizarOferta({
+      enOferta: datosActualizados.enOferta ?? anterior.enOferta ?? false,
+      descuento: datosActualizados.descuento ?? anterior.descuento ?? 0
+    }),
+    id: anterior.id
   }
 
   const validacion = validarProducto(productoActualizado)
 
   if (!validacion.valido) {
-    const error = new Error('El producto contiene datos inválidos.')
-    error.errores = validacion.errores
-    throw error
+    lanzarErrorValidacion(validacion.errores)
   }
 
   productos[indice] = productoActualizado
@@ -99,8 +111,6 @@ export function actualizarProducto(id, datosActualizados) {
 
   return productos[indice]
 }
-
-
 
 export function eliminarProducto(id) {
   const productos = leerProductos()
@@ -113,6 +123,5 @@ export function eliminarProducto(id) {
   }
 
   guardarProductos(productosActualizados)
-
   return true
 }

@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCarrito } from '../../context/CarritoContext'
+import { obtenerPrecioFinal } from '../../utils/precioProducto'
 
 const formatoPrecio = new Intl.NumberFormat('es-CL', {
   style: 'currency',
@@ -13,6 +14,10 @@ function ProductoCard({ producto }) {
   const { agregarAlCarrito } = useCarrito()
   const [agregado, setAgregado] = useState(false)
 
+  const precioOriginal = Number(producto.precio) || 0
+  const precioFinal = obtenerPrecioFinal(producto)
+  const tieneDescuento = producto.enOferta && precioFinal < precioOriginal
+
   function manejarAgregarAlCarrito() {
     agregarAlCarrito(producto)
     setAgregado(true)
@@ -21,6 +26,12 @@ function ProductoCard({ producto }) {
   return (
     <div className="card h-100 shadow-sm">
       <div className="card-body d-flex flex-column">
+        {tieneDescuento && (
+          <span className="badge text-bg-danger align-self-start mb-2">
+            ¡Oferta! {producto.descuento}% de descuento
+          </span>
+        )}
+
         <h5 className="card-title">{producto.nombre}</h5>
 
         <p className="text-muted mb-1">
@@ -33,9 +44,17 @@ function ProductoCard({ producto }) {
           <strong>Categoría:</strong> {producto.categoria}
         </p>
 
-        <p className="fw-bold fs-5">
-          {formatoPrecio.format(Number(producto.precio) || 0)}
-        </p>
+        <div className="mb-3">
+          {tieneDescuento && (
+            <p className="text-muted text-decoration-line-through mb-0">
+              {formatoPrecio.format(precioOriginal)}
+            </p>
+          )}
+
+          <p className={`fw-bold fs-5 mb-0 ${tieneDescuento ? 'text-danger' : ''}`}>
+            {formatoPrecio.format(precioFinal)}
+          </p>
+        </div>
 
         <p className="small">
           Stock disponible: {producto.stock}
@@ -45,15 +64,14 @@ function ProductoCard({ producto }) {
           className="btn btn-primary mt-auto"
           type="button"
           onClick={manejarAgregarAlCarrito}
+          disabled={Number(producto.stock) <= 0}
         >
-          Agregar al carrito
+          {Number(producto.stock) <= 0 ? 'Sin stock' : 'Agregar al carrito'}
         </button>
 
         {agregado && (
           <div className="alert alert-success mt-3 mb-0" role="status">
-            <p className="mb-2">
-              ¡Producto agregado al carrito!
-            </p>
+            <p className="mb-2">¡Producto agregado al carrito!</p>
             <Link to="/carrito" className="alert-link">
               Ver mi carrito
             </Link>
@@ -65,3 +83,4 @@ function ProductoCard({ producto }) {
 }
 
 export default ProductoCard
+
