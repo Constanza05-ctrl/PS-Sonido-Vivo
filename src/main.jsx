@@ -5,13 +5,16 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import App from './App.jsx'
 import { CarritoProvider } from './context/CarritoContext'
+import { AuthProvider } from './context/AuthContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <CarritoProvider>
-        <App />
-      </CarritoProvider>
+      <AuthProvider>
+        <CarritoProvider>
+          <App />
+        </CarritoProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 )

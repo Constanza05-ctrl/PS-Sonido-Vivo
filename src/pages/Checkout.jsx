@@ -1,8 +1,9 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCarrito } from '../context/CarritoContext'
+import { useAuth } from '../context/AuthContext'
 import { guardarPedido } from '../services/carritoService'
+import PublicTemplate from '../components/templates/PublicTemplate'
 
 const formatoPrecio = new Intl.NumberFormat('es-CL', {
   style: 'currency',
@@ -12,10 +13,12 @@ const formatoPrecio = new Intl.NumberFormat('es-CL', {
 
 function Checkout() {
   const { items, totalCompra, vaciarCarrito } = useCarrito()
+  const { usuario } = useAuth()
 
-  const [nombre, setNombre] = useState('')
-  const [apellido, setApellido] = useState('')
-  const [correo, setCorreo] = useState('')
+  const partesNombre = (usuario?.nombre || '').trim().split(' ')
+  const [nombre, setNombre] = useState(partesNombre[0] || '')
+  const [apellido, setApellido] = useState(partesNombre.slice(1).join(' ') || '')
+  const [correo, setCorreo] = useState(usuario?.email || '')
   const [telefono, setTelefono] = useState('')
   const [tipoEntrega, setTipoEntrega] = useState('retiro')
   const [direccion, setDireccion] = useState('')
@@ -31,6 +34,13 @@ function Checkout() {
       : 0
 
   const totalFinal = subtotal + costoDespacho
+
+  function manejarCambioEntrega(nuevoTipo) {
+    setTipoEntrega(nuevoTipo)
+    if (nuevoTipo === 'despacho' && metodoPago === 'Pago en efectivo en tienda') {
+      setMetodoPago('')
+    }
+  }
 
   function manejarConfirmacion(evento) {
     evento.preventDefault()
@@ -48,9 +58,13 @@ function Checkout() {
       return
     }
 
+    const esPagoPendienteEnTienda =
+      tipoEntrega === 'retiro' && metodoPago === 'Pago en efectivo en tienda'
+
     const pedido = {
       numeroPedido: `SV-${Date.now()}`,
       fecha: new Date().toISOString(),
+      usuarioEmail: usuario?.email || correo.trim(),
       cliente: {
         nombre: nombre.trim(),
         apellido: apellido.trim(),
@@ -60,6 +74,7 @@ function Checkout() {
       tipoEntrega,
       direccion: tipoEntrega === 'despacho' ? direccion.trim() : '',
       metodoPago,
+      estadoPago: esPagoPendienteEnTienda ? 'Pago pendiente' : 'Pago realizado',
       productos: items.map(item => ({
         ...item,
         precio: Number(item.precio),
@@ -87,342 +102,370 @@ function Checkout() {
 
   if (compraConfirmada) {
     const pedido = compraConfirmada
+    const pagoPendiente = pedido.estadoPago === 'Pago pendiente'
 
     return (
-      <main className="container py-5">
-        <div className="alert alert-success" role="status">
-          <h1 className="h3">¡Compra confirmada!</h1>
-          <p className="mb-1">
-            Gracias por comprar en Sonido Vivo, {pedido.cliente.nombre}.
-          </p>
-          <p className="mb-0">
-            Tu pedido fue registrado correctamente.
-          </p>
-        </div>
-
-        <section className="card mb-4">
-          <div className="card-body">
-            <h2 className="h4">Resumen de tu pedido</h2>
-
-            <p>
-              <strong>Número de pedido:</strong>{' '}
-              {pedido.numeroPedido}
+      <PublicTemplate>
+        <main className="container py-5">
+          <div className="alert alert-success" role="status">
+            <h1 className="h3">¡Compra confirmada!</h1>
+            <p className="mb-1">
+              Gracias por comprar en Sonido Vivo, {pedido.cliente.nombre}.
             </p>
-
-            <p>
-              <strong>Cliente:</strong>{' '}
-              {pedido.cliente.nombre} {pedido.cliente.apellido}
-            </p>
-
-            <p>
-              <strong>Correo:</strong> {pedido.cliente.correo}
-            </p>
-
-            <p>
-              <strong>Entrega:</strong>{' '}
-              {pedido.tipoEntrega === 'retiro'
-                ? 'Retiro en tienda'
-                : 'Despacho a domicilio'}
-            </p>
-
-            {pedido.tipoEntrega === 'despacho' && (
-              <p>
-                <strong>Dirección:</strong> {pedido.direccion}
-              </p>
-            )}
-
-            <p>
-              <strong>Método de pago:</strong> {pedido.metodoPago}
-            </p>
-
-            <h3 className="h5 mt-4">Productos comprados</h3>
-
-            <ul className="list-group mb-3">
-              {pedido.productos.map(item => (
-                <li
-                  className="list-group-item d-flex justify-content-between gap-3"
-                  key={item.id}
-                >
-                  <span>
-                    {item.nombre} × {item.cantidad}
-                  </span>
-                  <span className="text-nowrap">
-                    {formatoPrecio.format(item.subtotal)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <p className="d-flex justify-content-between mb-2">
-              <span>Subtotal productos</span>
-              <span>{formatoPrecio.format(pedido.subtotal)}</span>
-            </p>
-
-            <p className="d-flex justify-content-between mb-2">
-              <span>Costo de despacho</span>
-              <span>{formatoPrecio.format(pedido.costoDespacho)}</span>
-            </p>
-
-            <p className="d-flex justify-content-between fw-bold fs-5">
-              <span>Total de la compra</span>
-              <span>{formatoPrecio.format(pedido.total)}</span>
-            </p>
-
-            <p className="text-secondary mb-0">
-              Estado del pedido: {pedido.estado}
-            </p>
-
-            <p className="text-secondary small mt-2 mb-0">
-              El método de pago es simulado para esta evaluación.
-              No se ha procesado ningún pago real.
+            <p className="mb-0">
+              Tu pedido fue registrado correctamente y ya puedes seguir su estado en tu perfil.
             </p>
           </div>
-        </section>
 
-        <Link to="/catalogo" className="btn btn-primary">
-          Volver al catálogo
-        </Link>
-      </main>
+          <section className="card mb-4">
+            <div className="card-body">
+              <h2 className="h4">Resumen de tu pedido</h2>
+
+              <p>
+                <strong>Número de pedido:</strong>{' '}
+                {pedido.numeroPedido}
+              </p>
+
+              <p>
+                <strong>Cliente:</strong>{' '}
+                {pedido.cliente.nombre} {pedido.cliente.apellido}
+              </p>
+
+              <p>
+                <strong>Correo:</strong> {pedido.cliente.correo}
+              </p>
+
+              <p>
+                <strong>Entrega:</strong>{' '}
+                {pedido.tipoEntrega === 'retiro'
+                  ? 'Retiro en tienda'
+                  : 'Despacho a domicilio'}
+              </p>
+
+              {pedido.tipoEntrega === 'despacho' && (
+                <p>
+                  <strong>Dirección:</strong> {pedido.direccion}
+                </p>
+              )}
+
+              <p>
+                <strong>Método de pago:</strong> {pedido.metodoPago}
+              </p>
+
+              <p>
+                <strong>Estado del pago:</strong>{' '}
+                <span className={`badge ${pagoPendiente ? 'bg-warning text-dark' : 'bg-success'}`}>
+                  {pedido.estadoPago}
+                </span>
+                {pagoPendiente && (
+                  <span className="text-muted small ms-2">
+                    (Deberás abonar en caja al retirar tu pedido en tienda)
+                  </span>
+                )}
+              </p>
+
+              <h3 className="h5 mt-4">Productos comprados</h3>
+
+              <ul className="list-group mb-3">
+                {pedido.productos.map(item => (
+                  <li
+                    className="list-group-item d-flex justify-content-between gap-3"
+                    key={item.id}
+                  >
+                    <span>
+                      {item.nombre} × {item.cantidad}
+                    </span>
+                    <span className="text-nowrap">
+                      {formatoPrecio.format(item.subtotal)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="d-flex justify-content-between mb-2">
+                <span>Subtotal productos</span>
+                <span>{formatoPrecio.format(pedido.subtotal)}</span>
+              </p>
+
+              <p className="d-flex justify-content-between mb-2">
+                <span>Costo de despacho</span>
+                <span>{formatoPrecio.format(pedido.costoDespacho)}</span>
+              </p>
+
+              <p className="d-flex justify-content-between fw-bold fs-5">
+                <span>Total de la compra</span>
+                <span>{formatoPrecio.format(pedido.total)}</span>
+              </p>
+
+              <p className="mb-0">
+                <strong>Estado del pedido:</strong>{' '}
+                <span className="badge bg-info text-dark">{pedido.estado}</span>
+              </p>
+            </div>
+          </section>
+
+          <div className="d-flex flex-wrap gap-2">
+            <Link to="/perfil" className="btn btn-dark">
+              Ver estado en Mi Perfil
+            </Link>
+            <Link to="/catalogo" className="btn btn-outline-primary">
+              Volver al catálogo
+            </Link>
+          </div>
+        </main>
+      </PublicTemplate>
     )
   }
 
   if (items.length === 0) {
     return (
-      <main className="container py-5">
-        <h1>Confirmar compra</h1>
-        <p>Tu carrito está vacío. Agrega productos antes de continuar.</p>
-        <Link to="/catalogo" className="btn btn-primary">
-          Ir al catálogo
-        </Link>
-      </main>
+      <PublicTemplate>
+        <main className="container py-5">
+          <h1>Confirmar compra</h1>
+          <p>Tu carrito está vacío. Agrega productos antes de continuar.</p>
+          <Link to="/catalogo" className="btn btn-primary">
+            Ir al catálogo
+          </Link>
+        </main>
+      </PublicTemplate>
     )
   }
 
   return (
-    <main className="container py-5">
-      <h1 className="mb-4">Confirmar compra</h1>
+    <PublicTemplate>
+      <main className="container py-5">
+        <h1 className="mb-4">Confirmar compra</h1>
 
-      <div className="row g-4">
-        <section className="col-12 col-lg-7">
-          <form onSubmit={manejarConfirmacion}>
-            <fieldset className="border rounded p-3 mb-4">
-              <legend className="float-none w-auto px-2">
-                Datos del cliente
-              </legend>
+        <div className="row g-4">
+          <section className="col-12 col-lg-7">
+            <form onSubmit={manejarConfirmacion}>
+              <fieldset className="border rounded p-3 mb-4">
+                <legend className="float-none w-auto px-2">
+                  Datos del cliente
+                </legend>
 
-              <div className="mb-3">
-                <label htmlFor="nombre" className="form-label">
-                  Nombre
-                </label>
-                <input
-                  id="nombre"
-                  className="form-control"
-                  type="text"
-                  value={nombre}
-                  onChange={evento => setNombre(evento.target.value)}
-                  autoComplete="given-name"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="apellido" className="form-label">
-                  Apellido
-                </label>
-                <input
-                  id="apellido"
-                  className="form-control"
-                  type="text"
-                  value={apellido}
-                  onChange={evento => setApellido(evento.target.value)}
-                  autoComplete="family-name"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="correo" className="form-label">
-                  Correo electrónico
-                </label>
-                <input
-                  id="correo"
-                  className="form-control"
-                  type="email"
-                  value={correo}
-                  onChange={evento => setCorreo(evento.target.value)}
-                  autoComplete="email"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="telefono" className="form-label">
-                  Teléfono
-                </label>
-                <input
-                  id="telefono"
-                  className="form-control"
-                  type="tel"
-                  value={telefono}
-                  onChange={evento => setTelefono(evento.target.value)}
-                  autoComplete="tel"
-                  required
-                />
-              </div>
-            </fieldset>
-
-            <fieldset className="border rounded p-3 mb-4">
-              <legend className="float-none w-auto px-2">
-                Tipo de entrega
-              </legend>
-
-              <div className="form-check mb-2">
-                <input
-                  id="retiro"
-                  className="form-check-input"
-                  type="radio"
-                  name="tipoEntrega"
-                  value="retiro"
-                  checked={tipoEntrega === 'retiro'}
-                  onChange={evento => setTipoEntrega(evento.target.value)}
-                />
-                <label htmlFor="retiro" className="form-check-label">
-                  Retiro en tienda — Gratis
-                </label>
-              </div>
-
-              <div className="form-check mb-3">
-                <input
-                  id="despacho"
-                  className="form-check-input"
-                  type="radio"
-                  name="tipoEntrega"
-                  value="despacho"
-                  checked={tipoEntrega === 'despacho'}
-                  onChange={evento => setTipoEntrega(evento.target.value)}
-                />
-                <label htmlFor="despacho" className="form-check-label">
-                  Despacho a domicilio — 10 % del subtotal
-                </label>
-              </div>
-
-              {tipoEntrega === 'despacho' && (
-                <div>
-                  <label htmlFor="direccion" className="form-label">
-                    Dirección de despacho
+                <div className="mb-3">
+                  <label htmlFor="nombre" className="form-label">
+                    Nombre
                   </label>
                   <input
-                    id="direccion"
+                    id="nombre"
                     className="form-control"
                     type="text"
-                    value={direccion}
-                    onChange={evento => setDireccion(evento.target.value)}
-                    autoComplete="street-address"
+                    value={nombre}
+                    onChange={evento => setNombre(evento.target.value)}
+                    autoComplete="given-name"
                     required
                   />
                 </div>
-              )}
-            </fieldset>
 
-            <fieldset className="border rounded p-3 mb-4">
-              <legend className="float-none w-auto px-2">
-                Método de pago
-              </legend>
+                <div className="mb-3">
+                  <label htmlFor="apellido" className="form-label">
+                    Apellido
+                  </label>
+                  <input
+                    id="apellido"
+                    className="form-control"
+                    type="text"
+                    value={apellido}
+                    onChange={evento => setApellido(evento.target.value)}
+                    autoComplete="family-name"
+                    required
+                  />
+                </div>
 
-              <div className="mb-3">
-                <label htmlFor="metodoPago" className="form-label">
-                  Selecciona cómo pagarás
-                </label>
+                <div className="mb-3">
+                  <label htmlFor="correo" className="form-label">
+                    Correo electrónico
+                  </label>
+                  <input
+                    id="correo"
+                    className="form-control"
+                    type="email"
+                    value={correo}
+                    onChange={evento => setCorreo(evento.target.value)}
+                    autoComplete="email"
+                    required
+                  />
+                </div>
 
-                <select
-                  id="metodoPago"
-                  className="form-select"
-                  value={metodoPago}
-                  onChange={evento => setMetodoPago(evento.target.value)}
-                  required
-                >
-                  <option value="">Selecciona un método de pago</option>
-                  <option value="Tarjeta de crédito/débito">
-                    Tarjeta de crédito/débito
-                  </option>
-                  <option value="Transferencia bancaria">
-                    Transferencia bancaria
-                  </option>
-                  <option value="Efectivo al retirar o recibir">
-                    Efectivo al retirar o recibir
-                  </option>
-                </select>
-              </div>
-            </fieldset>
+                <div>
+                  <label htmlFor="telefono" className="form-label">
+                    Teléfono
+                  </label>
+                  <input
+                    id="telefono"
+                    className="form-control"
+                    type="tel"
+                    value={telefono}
+                    onChange={evento => setTelefono(evento.target.value)}
+                    autoComplete="tel"
+                    required
+                  />
+                </div>
+              </fieldset>
 
-            {errorConfirmacion && (
-              <div className="alert alert-danger" role="alert">
-                <p className="mb-2">{errorConfirmacion}</p>
-                <button type="submit" className="btn btn-outline-danger">
-                  Reintentar registro del pedido
-                </button>
-              </div>
-            )}
+              <fieldset className="border rounded p-3 mb-4">
+                <legend className="float-none w-auto px-2">
+                  Tipo de entrega
+                </legend>
 
-            <button type="submit" className="btn btn-success">
-              Confirmar compra
-            </button>
-          </form>
-        </section>
+                <div className="form-check mb-2">
+                  <input
+                    id="retiro"
+                    className="form-check-input"
+                    type="radio"
+                    name="tipoEntrega"
+                    value="retiro"
+                    checked={tipoEntrega === 'retiro'}
+                    onChange={evento => manejarCambioEntrega(evento.target.value)}
+                  />
+                  <label htmlFor="retiro" className="form-check-label">
+                    Retiro en tienda — Gratis
+                  </label>
+                </div>
 
-        <aside className="col-12 col-lg-5">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="h4 card-title">Resumen de compra</h2>
+                <div className="form-check mb-3">
+                  <input
+                    id="despacho"
+                    className="form-check-input"
+                    type="radio"
+                    name="tipoEntrega"
+                    value="despacho"
+                    checked={tipoEntrega === 'despacho'}
+                    onChange={evento => manejarCambioEntrega(evento.target.value)}
+                  />
+                  <label htmlFor="despacho" className="form-check-label">
+                    Despacho a domicilio — 10 % del subtotal
+                  </label>
+                </div>
 
-              <ul className="list-group list-group-flush mb-3">
-                {items.map(item => (
-                  <li
-                    className="list-group-item px-0"
-                    key={item.id}
+                {tipoEntrega === 'despacho' && (
+                  <div>
+                    <label htmlFor="direccion" className="form-label">
+                      Dirección de despacho
+                    </label>
+                    <input
+                      id="direccion"
+                      className="form-control"
+                      type="text"
+                      value={direccion}
+                      onChange={evento => setDireccion(evento.target.value)}
+                      autoComplete="street-address"
+                      required
+                    />
+                  </div>
+                )}
+              </fieldset>
+
+              <fieldset className="border rounded p-3 mb-4">
+                <legend className="float-none w-auto px-2">
+                  Método de pago
+                </legend>
+
+                <div className="mb-2">
+                  <label htmlFor="metodoPago" className="form-label">
+                    Selecciona cómo pagarás
+                  </label>
+
+                  <select
+                    id="metodoPago"
+                    className="form-select"
+                    value={metodoPago}
+                    onChange={evento => setMetodoPago(evento.target.value)}
+                    required
                   >
-                    <div className="d-flex justify-content-between gap-3">
-                      <span>
-                        {item.nombre} × {item.cantidad}
-                      </span>
-                      <span className="text-nowrap">
-                        {formatoPrecio.format(
-                          Number(item.precio) * Number(item.cantidad)
-                        )}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    <option value="">Selecciona un método de pago</option>
+                    <option value="Tarjeta de crédito/débito">
+                      Tarjeta de crédito/débito (Pago inmediato)
+                    </option>
+                    <option value="Transferencia bancaria">
+                      Transferencia bancaria (Pago inmediato)
+                    </option>
+                    {tipoEntrega === 'retiro' && (
+                      <option value="Pago en efectivo en tienda">
+                        Pago en efectivo en tienda (Pago pendiente al retirar)
+                      </option>
+                    )}
+                  </select>
+                </div>
 
-              <p className="d-flex justify-content-between">
-                <span>Subtotal productos</span>
-                <span>{formatoPrecio.format(subtotal)}</span>
-              </p>
+                <small className="text-muted">
+                  {tipoEntrega === 'retiro'
+                    ? 'Si eliges pago en efectivo, tu pedido quedará con estado "Pago pendiente" hasta cancelar en tienda.'
+                    : 'Para despacho a domicilio solo se admiten pagos electrónicos previos.'}
+                </small>
+              </fieldset>
 
-              <p className="d-flex justify-content-between">
-                <span>Costo de despacho</span>
-                <span>{formatoPrecio.format(costoDespacho)}</span>
-              </p>
+              {errorConfirmacion && (
+                <div className="alert alert-danger" role="alert">
+                  <p className="mb-2">{errorConfirmacion}</p>
+                  <button type="submit" className="btn btn-outline-danger">
+                    Reintentar registro del pedido
+                  </button>
+                </div>
+              )}
 
-              <p className="d-flex justify-content-between fw-bold fs-5">
-                <span>Total</span>
-                <span>{formatoPrecio.format(totalFinal)}</span>
-              </p>
+              <button type="submit" className="btn btn-success">
+                Confirmar compra
+              </button>
+            </form>
+          </section>
 
-              <p className="text-secondary small">
-                El despacho corresponde al 10 % del subtotal.
-                El retiro en tienda es gratuito.
-              </p>
+          <aside className="col-12 col-lg-5">
+            <div className="card">
+              <div className="card-body">
+                <h2 className="h4 card-title">Resumen de compra</h2>
 
-              <Link to="/carrito" className="btn btn-outline-secondary w-100">
-                Volver al carrito
-              </Link>
+                <ul className="list-group list-group-flush mb-3">
+                  {items.map(item => (
+                    <li
+                      className="list-group-item px-0"
+                      key={item.id}
+                    >
+                      <div className="d-flex justify-content-between gap-3">
+                        <span>
+                          {item.nombre} × {item.cantidad}
+                        </span>
+                        <span className="text-nowrap">
+                          {formatoPrecio.format(
+                            Number(item.precio) * Number(item.cantidad)
+                          )}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="d-flex justify-content-between">
+                  <span>Subtotal productos</span>
+                  <span>{formatoPrecio.format(subtotal)}</span>
+                </p>
+
+                <p className="d-flex justify-content-between">
+                  <span>Costo de despacho</span>
+                  <span>{formatoPrecio.format(costoDespacho)}</span>
+                </p>
+
+                <p className="d-flex justify-content-between fw-bold fs-5">
+                  <span>Total</span>
+                  <span>{formatoPrecio.format(totalFinal)}</span>
+                </p>
+
+                <p className="text-secondary small">
+                  El despacho corresponde al 10 % del subtotal.
+                  El retiro en tienda es gratuito.
+                </p>
+
+                <Link to="/carrito" className="btn btn-outline-secondary w-100">
+                  Volver al carrito
+                </Link>
+              </div>
             </div>
-          </div>
-        </aside>
-      </div>
-    </main>
+          </aside>
+        </div>
+      </main>
+    </PublicTemplate>
   )
 }
 

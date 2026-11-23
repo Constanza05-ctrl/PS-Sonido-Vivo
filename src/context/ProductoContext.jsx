@@ -1,42 +1,46 @@
-
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import {
   obtenerProductos,
-  agregarProducto as agregarProductoService,
-  actualizarProducto as actualizarProductoService,
-  eliminarProducto as eliminarProductoService
+  agregarProducto,
+  actualizarProducto,
+  eliminarProducto
 } from '../services/productoService'
 
-const ProductoContext = createContext()
+const ProductoContext = createContext(null)
 
 export function ProductoProvider({ children }) {
-  const [productos, setProductos] = useState(() => obtenerProductos())
+  const [productos, setProductos] = useState([])
+  const [cargando, setCargando] = useState(true)
 
-  function agregarProducto(nuevoProducto) {
-    const producto = agregarProductoService(nuevoProducto)
-
-    setProductos(obtenerProductos())
-
-    return producto
+  async function recargarProductos() {
+    setCargando(true)
+    try {
+      const lista = await obtenerProductos()
+      setProductos(Array.isArray(lista) ? lista : [])
+    } finally {
+      setCargando(false)
+    }
   }
 
-  function actualizarProducto(id, datosActualizados) {
-    const producto = actualizarProductoService(id, datosActualizados)
+  useEffect(() => {
+    recargarProductos()
+  }, [])
 
-    if (producto !== null) {
-      setProductos(obtenerProductos())
-    }
-
-    return producto
+  async function crearProducto(nuevoProducto) {
+    const creado = await agregarProducto(nuevoProducto)
+    await recargarProductos()
+    return creado
   }
 
-  function eliminarProducto(id) {
-    const eliminado = eliminarProductoService(id)
+  async function editarProducto(id, datosActualizados) {
+    const actualizado = await actualizarProducto(id, datosActualizados)
+    await recargarProductos()
+    return actualizado
+  }
 
-    if (eliminado) {
-      setProductos(obtenerProductos())
-    }
-
+  async function borrarProducto(id) {
+    const eliminado = await eliminarProducto(id)
+    await recargarProductos()
     return eliminado
   }
 
@@ -44,9 +48,11 @@ export function ProductoProvider({ children }) {
     <ProductoContext.Provider
       value={{
         productos,
-        agregarProducto,
-        actualizarProducto,
-        eliminarProducto
+        cargando,
+        recargarProductos,
+        crearProducto,
+        editarProducto,
+        borrarProducto
       }}
     >
       {children}
@@ -55,5 +61,9 @@ export function ProductoProvider({ children }) {
 }
 
 export function useProductos() {
-  return useContext(ProductoContext)
+  const context = useContext(ProductoContext)
+  if (!context) {
+    throw new Error('useProductos debe usarse dentro de ProductoProvider')
+  }
+  return context
 }

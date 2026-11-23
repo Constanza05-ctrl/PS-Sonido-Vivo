@@ -1,7 +1,7 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCarrito } from '../../context/CarritoContext'
+import { useAuth } from '../../context/AuthContext'
 import { obtenerPrecioFinal } from '../../utils/precioProducto'
 
 const formatoPrecio = new Intl.NumberFormat('es-CL', {
@@ -12,13 +12,16 @@ const formatoPrecio = new Intl.NumberFormat('es-CL', {
 
 function ProductoCard({ producto }) {
   const { agregarAlCarrito } = useCarrito()
+  const { esAdmin } = useAuth()
   const [agregado, setAgregado] = useState(false)
 
   const precioOriginal = Number(producto.precio) || 0
   const precioFinal = obtenerPrecioFinal(producto)
   const tieneDescuento = producto.enOferta && precioFinal < precioOriginal
+  const sinStock = Number(producto.stock) <= 0
 
   function manejarAgregarAlCarrito() {
+    if (esAdmin || sinStock) return
     agregarAlCarrito(producto)
     setAgregado(true)
   }
@@ -56,20 +59,22 @@ function ProductoCard({ producto }) {
           </p>
         </div>
 
-        <p className="small">
+        <p className="small mb-0">
           Stock disponible: {producto.stock}
         </p>
 
-        <button
-          className="btn btn-primary mt-auto"
-          type="button"
-          onClick={manejarAgregarAlCarrito}
-          disabled={Number(producto.stock) <= 0}
-        >
-          {Number(producto.stock) <= 0 ? 'Sin stock' : 'Agregar al carrito'}
-        </button>
+        {!esAdmin && (
+          <button
+            className="btn btn-primary mt-3"
+            type="button"
+            onClick={manejarAgregarAlCarrito}
+            disabled={sinStock}
+          >
+            {sinStock ? 'Sin stock' : 'Agregar al carrito'}
+          </button>
+        )}
 
-        {agregado && (
+        {agregado && !esAdmin && (
           <div className="alert alert-success mt-3 mb-0" role="status">
             <p className="mb-2">¡Producto agregado al carrito!</p>
             <Link to="/carrito" className="alert-link">
@@ -83,4 +88,3 @@ function ProductoCard({ producto }) {
 }
 
 export default ProductoCard
-

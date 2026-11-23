@@ -1,4 +1,3 @@
-
 const CLAVE_CARRITO = 'sonido-vivo-carrito'
 const CLAVE_PEDIDOS = 'sonido-vivo-pedidos'
 
@@ -44,4 +43,17 @@ export function guardarPedido(pedido) {
     CLAVE_PEDIDOS,
     JSON.stringify([...pedidos, pedido])
   )
+}
+
+// Actualizar estado logístico o estado de pago de un pedido existente.
+export function actualizarPedido(numeroPedido, cambios) {
+  const pedidos = obtenerPedidosGuardados()
+  const actualizados = pedidos.map(pedido =>
+    pedido.numeroPedido === numeroPedido
+      ? { ...pedido, ...cambios }
+      : pedido
+  )
+
+  localStorage.setItem(CLAVE_PEDIDOS, JSON.stringify(actualizados))
+  return actualizados.find(p => p.numeroPedido === numeroPedido) || null
 }

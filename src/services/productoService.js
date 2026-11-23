@@ -1,8 +1,11 @@
-
 import { productos as productosIniciales } from '../data/productos'
 import { validarProducto } from '../utils/validarProducto'
+import { API_BASE_URL, ENDPOINTS } from '../config/apiConfig'
+import { apiRequest } from './api'
 
 const STORAGE_KEY = 'sonido-vivo-productos'
+const USAR_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
+const URL_PRODUCTOS = `${API_BASE_URL}${ENDPOINTS.PRODUCTOS}`
 
 function guardarProductos(productos) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(productos))
@@ -19,7 +22,6 @@ function leerProductos() {
 
   try {
     const productosGuardados = JSON.parse(datosGuardados)
-
     if (Array.isArray(productosGuardados)) {
       return productosGuardados
     }
@@ -48,16 +50,22 @@ function lanzarErrorValidacion(errores) {
   throw error
 }
 
-export function obtenerProductos() {
-  return leerProductos()
+export async function obtenerProductos() {
+  if (USAR_MOCK) {
+    return leerProductos()
+  }
+  return apiRequest(URL_PRODUCTOS, { method: 'GET' })
 }
 
-export function obtenerProductoPorId(id) {
-  return leerProductos().find(producto => producto.id === id)
+export async function obtenerProductoPorId(id) {
+  if (USAR_MOCK) {
+    return leerProductos().find(producto => producto.id === id)
+  }
+  return apiRequest(`${URL_PRODUCTOS}/${id}`, { method: 'GET' })
 }
 
-export function agregarProducto(nuevoProducto) {
-  const producto = {
+export async function agregarProducto(nuevoProducto) {
+  const productoValidar = {
     ...nuevoProducto,
     stock: Number(nuevoProducto.stock),
     precio: Number(nuevoProducto.precio),
@@ -65,63 +73,68 @@ export function agregarProducto(nuevoProducto) {
     id: Date.now()
   }
 
-  const validacion = validarProducto(producto)
-
+  const validacion = validarProducto(productoValidar)
   if (!validacion.valido) {
     lanzarErrorValidacion(validacion.errores)
   }
 
-  const productos = leerProductos()
-  productos.push(producto)
-  guardarProductos(productos)
-
-  return producto
-}
-
-export function actualizarProducto(id, datosActualizados) {
-  const productos = leerProductos()
-  const indice = productos.findIndex(producto => producto.id === id)
-
-  if (indice === -1) {
-    return null
+  if (USAR_MOCK) {
+    const productos = leerProductos()
+    productos.push(productoValidar)
+    guardarProductos(productos)
+    return productoValidar
   }
 
-  const anterior = productos[indice]
+  const { id: _ignorarId, ...payloadApi } = productoValidar
+  return apiRequest(URL_PRODUCTOS, {
+    method: 'POST',
+    body: JSON.stringify(payloadApi)
+  })
+}
 
-  const productoActualizado = {
-    ...anterior,
+export async function actualizarProducto(id, datosActualizados) {
+  const productoPreparado = {
     ...datosActualizados,
-    stock: Number(datosActualizados.stock ?? anterior.stock),
-    precio: Number(datosActualizados.precio ?? anterior.precio),
+    stock: Number(datosActualizados.stock ?? 0),
+    precio: Number(datosActualizados.precio ?? 0),
     ...normalizarOferta({
-      enOferta: datosActualizados.enOferta ?? anterior.enOferta ?? false,
-      descuento: datosActualizados.descuento ?? anterior.descuento ?? 0
+      enOferta: datosActualizados.enOferta ?? false,
+      descuento: datosActualizados.descuento ?? 0
     }),
-    id: anterior.id
+    id
   }
 
-  const validacion = validarProducto(productoActualizado)
-
+  const validacion = validarProducto(productoPreparado)
   if (!validacion.valido) {
     lanzarErrorValidacion(validacion.errores)
   }
 
-  productos[indice] = productoActualizado
-  guardarProductos(productos)
+  if (USAR_MOCK) {
+    const productos = leerProductos()
+    const indice = productos.findIndex(producto => producto.id === id)
+    if (indice === -1) return null
 
-  return productos[indice]
-}
-
-export function eliminarProducto(id) {
-  const productos = leerProductos()
-  const productosActualizados = productos.filter(
-    producto => producto.id !== id
-  )
-
-  if (productosActualizados.length === productos.length) {
-    return false
+    productos[indice] = { ...productos[indice], ...productoPreparado, id }
+    guardarProductos(productos)
+    return productos[indice]
   }
 
-  guardarProductos(productosActualizados)
+  return apiRequest(`${URL_PRODUCTOS}/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(productoPreparado)
+  })
+}
+
+export async function eliminarProducto(id) {
+  if (USAR_MOCK) {
+    const productos = leerProductos()
+    const productosActualizados = productos.filter(producto => producto.id !== id)
+    if (productosActualizados.length === productos.length) return false
+
+    guardarProductos(productosActualizados)
+    return true
+  }
+
+  await apiRequest(`${URL_PRODUCTOS}/${id}`, { method: 'DELETE' })
   return true
 }
