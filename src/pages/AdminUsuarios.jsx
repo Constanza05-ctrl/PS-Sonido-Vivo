@@ -21,6 +21,8 @@ function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState([])
   const [formulario, setFormulario] = useState(formularioInicial)
   const [usuarioEnEdicion, setUsuarioEnEdicion] = useState(null)
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState(null)
+  const [eliminando, setEliminando] = useState(false)
   const [notificacion, setNotificacion] = useState(null)
   const [cargando, setCargando] = useState(true)
 
@@ -40,7 +42,10 @@ function AdminUsuarios() {
     setCargando(true)
     try {
       const lista = await obtenerUsuarios()
-      setUsuarios(Array.isArray(lista) ? lista : [])
+      const usuariosActivos = Array.isArray(lista)
+        ? lista.filter(u => u.activo !== false)
+        : []
+      setUsuarios(usuariosActivos)
     } catch (err) {
       mostrarNotificacion('danger', 'Error al cargar', err.message)
     } finally {
@@ -105,6 +110,7 @@ function AdminUsuarios() {
   }
 
   function prepararEdicion(usuario) {
+    setUsuarioAEliminar(null)
     setUsuarioEnEdicion(usuario)
     setFormulario({
       nombre: usuario.nombre || '',
@@ -116,8 +122,9 @@ function AdminUsuarios() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  async function manejarEliminacion(usuario) {
+  function solicitarEliminacion(usuario) {
     if (usuario.email === usuarioActual?.email) {
+      setUsuarioAEliminar(null)
       mostrarNotificacion(
         'danger',
         'Acción no permitida',
@@ -125,25 +132,31 @@ function AdminUsuarios() {
       )
       return
     }
+    setUsuarioAEliminar(usuario)
+  }
 
-    const confirmar = window.confirm(
-      `¿Seguro que deseas eliminar/desactivar al usuario "${usuario.nombre}" (${usuario.email})?`
-    )
-    if (!confirmar) return
+  async function confirmarEliminacion() {
+    if (!usuarioAEliminar) return
+    const objetivo = usuarioAEliminar
+    setEliminando(true)
 
     try {
-      await eliminarUsuario(usuario.id)
-      if (usuarioEnEdicion?.id === usuario.id) {
+      await eliminarUsuario(objetivo.id)
+      if (usuarioEnEdicion?.id === objetivo.id) {
         limpiarFormulario()
       }
+      setUsuarios(prev => prev.filter(u => u.id !== objetivo.id))
+      setUsuarioAEliminar(null)
       mostrarNotificacion(
         'success',
         'Usuario eliminado',
-        `El usuario ${usuario.nombre} fue removido del listado.`
+        `El usuario ${objetivo.nombre} fue eliminado del listado.`
       )
       await cargarUsuarios()
     } catch (err) {
       mostrarNotificacion('danger', 'Error al eliminar', err.message)
+    } finally {
+      setEliminando(false)
     }
   }
 
@@ -304,6 +317,40 @@ function AdminUsuarios() {
             </button>
           </div>
 
+          {usuarioAEliminar && (
+            <div
+              className="alert alert-warning border-warning shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+              role="alert"
+            >
+              <div>
+                <h3 className="h6 fw-bold mb-1">Confirmar eliminación de usuario</h3>
+                <p className="mb-0">
+                  ¿Estás seguro de que deseas eliminar a{' '}
+                  <strong>{usuarioAEliminar.nombre}</strong> ({usuarioAEliminar.email})? El
+                  usuario será desactivado y desaparecerá de esta lista.
+                </p>
+              </div>
+              <div className="d-flex gap-2 flex-shrink-0">
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  disabled={eliminando}
+                  onClick={confirmarEliminacion}
+                >
+                  {eliminando ? 'Eliminando...' : 'Sí, eliminar'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm"
+                  disabled={eliminando}
+                  onClick={() => setUsuarioAEliminar(null)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+
           {cargando ? (
             <p className="text-muted">Cargando usuarios desde la API...</p>
           ) : (
@@ -321,7 +368,10 @@ function AdminUsuarios() {
                 </thead>
                 <tbody>
                   {usuarios.map(u => (
-                    <tr key={u.id}>
+                    <tr
+                      key={u.id}
+                      className={usuarioAEliminar?.id === u.id ? 'table-warning' : ''}
+                    >
                       <td>{u.id}</td>
                       <td>
                         <strong>{u.nombre}</strong>
@@ -337,13 +387,7 @@ function AdminUsuarios() {
                         </span>
                       </td>
                       <td>
-                        <span
-                          className={`badge ${
-                            u.activo !== false ? 'bg-success' : 'bg-danger'
-                          }`}
-                        >
-                          {u.activo !== false ? 'Activo' : 'Inactivo'}
-                        </span>
+                        <span className="badge bg-success">Activo</span>
                       </td>
                       <td>
                         <div className="d-flex flex-wrap gap-2">
@@ -357,7 +401,7 @@ function AdminUsuarios() {
                           <button
                             type="button"
                             className="btn btn-sm btn-outline-danger"
-                            onClick={() => manejarEliminacion(u)}
+                            onClick={() => solicitarEliminacion(u)}
                           >
                             Eliminar
                           </button>
